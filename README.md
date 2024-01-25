@@ -1,4 +1,5 @@
-Repositório para o Simulador Didático SimuS do Livro de Arquitetura de Computadores - Uma Introdução
+# Repositório para o Simulador Didático SimuS do Livro de Arquitetura de Computadores - Uma Introdução
+
 A evolução da computação, seja como ciência básica ou aplicada, tem sido notável, trazendo inovações constantes desde seus primórdios. O computador, como peça central, acompanhou cada mudança, refinando seus componentes e formas de organização. A atualização dos materiais didáticos para o ensino da organização e arquitetura de computadores é essencial, assegurando uma compreensão sólida para os alunos em cursos de computação.
 
 O entendimento dessa área é crucial, não apenas para os que projetarão novos computadores, mas também para os que os utilizarão. Dominar os princípios básicos de funcionamento dos computadores e a tecnologia embutida torna o uso de recursos mais eficaz e permite resolver uma variedade de problemas com essa tecnologia.
