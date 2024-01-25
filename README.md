@@ -1,4 +1,8 @@
-# Repositório para o Simulador Didático SimuS do Livro de Arquitetura de Computadores - Uma Introdução
+# Simulador SimuS 
+
+O simulador SimuS é um simulador didático desenvolvido para o processador didática Sapiens, descrito no livro *Arquitetura de Computadores - Uma Introdução* (Editora LTC - 2024).
+
+Este livro é resultado da experiência acumulada pelos autores durante anos de cátedra em diversos cursos de graduação na área tecnológica. O objetivo deste livro é mostrar o funcionamento do computador de um ponto de vista de fácil compreensão para os alunos em uma disciplina de graduação de Organização ou Arquitetura de Computadores. dos cursos Bacharelado em Ciência da Computação; Engenharia de Computação; Bacharelado em Sistemas de Informação e Licenciatura em Computação; e os Cursos Superiores de Tecnologia;  além de, mais recentemente, do Curso de Ciência de Dados.
 
 A evolução da computação, seja como ciência básica ou aplicada, tem sido notável, trazendo inovações constantes desde seus primórdios. O computador, como peça central, acompanhou cada mudança, refinando seus componentes e formas de organização. A atualização dos materiais didáticos para o ensino da organização e arquitetura de computadores é essencial, assegurando uma compreensão sólida para os alunos em cursos de computação.
 
