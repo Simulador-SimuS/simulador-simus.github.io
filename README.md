@@ -6,7 +6,9 @@ O uso de exemplos de programas em linguagem de montagem é enfatizado como cruci
 
 Um dos recursos disponíveis no repositório é um manual para a arquitetura do processador Sapiens no seguinte endereço <https://github.com/Simulador-SimuS/SimuS/blob/main/docs/manual.md>.
 
-Em breve estarão disponíveis alguns alides de apoio para o material do livro. 
+<img src="Sapiens.png" name="SimuS" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="500" height="350" />  
+
+Em breve estarão disponíveis alguns slides de apoio para o material do livro. 
 
 
 
