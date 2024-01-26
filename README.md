@@ -4,7 +4,8 @@ O SimuS é um simulador desenvolvido para o processador didático Sapiens, detal
 
 O uso de exemplos de programas em linguagem de montagem é enfatizado como crucial para a compreensão, e para isso, é disponibilizado um simulador didático gratuito no repositório [Simulador Simus](https://github.com/Simulador-Simus/SimuS), contendo código-fonte, executáveis para diversos sistemas operacionais e um manual detalhado. Além disso, todos os exemplos em linguagem de montagem utilizados no livro e respostas para os exercícios propostos no Capítulo de Linguagem de Montagem estão disponíveis no mesmo repositório.
 
-Um dos recursos disponíveis no repositório é um manual para a arquitetura do processador Sapiens no seguinte endereço <https://github.com/Simulador-SimuS/SimuS/blob/main/docs/manual.md>.
+Um dos recursos disponíveis no repositório é um [manual](https://github.com/Simulador-SimuS/SimuS/blob/main/docs/manual.md)
+para a arquitetura do processador Sapiens, cujo modelo de arquitetura pode ser visalizado a seguir:
 
 <img src="Sapiens.png" name="SimuS" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="500" height="350" />  
 
