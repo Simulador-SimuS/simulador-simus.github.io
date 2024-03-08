@@ -16,7 +16,7 @@ No simulador SimuS mantivemos a interface básica do seu predecessor, o simulado
 - Dispositivos  especiais como uma  console  virtual, acessada  pelo  mecanismo de TRAP descrito em detalhes na documentação. Com esse mecanismo   outros   módulos   mais complexos  possam   ser  facilmente   instalados,  sem necessidade  de   expor   esta   complexidade   para   osusuários.
 - Gerador/carregador de imagem da memória simulada, podendo ser salva em formato hexadecimal. Note que neste caso a compatibilidade entre o Simus e o Neanderwin não é mantida, ou seja, a imagem salvaem um simulador não pode ser carregada em outro.
   
-Um dos recursos disponíveis no repositório é um [manual](https://github.com/Simulador-SimuS/SimuS/blob/main/docs/manual.md)
+Um dos recursos disponíveis no repositório é um [manual](https://github.com/Simulador-SimuS/SimuS/master/main/docs/manual.md)
 para a arquitetura do processador Sapiens, cujo modelo de arquitetura pode ser visalizado a seguir:
 
 <img src="Sapiens.png" name="SimuS" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="500" height="350" />  
