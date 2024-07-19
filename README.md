@@ -27,7 +27,7 @@ O processador Sapiens tem um modelo de arquitetura cujo diagrama em blocos pode 
 
 Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os quais destacamos:
 - **Arduino**: a possibilidade de controlar atuadores e sensores conectados aos pinos de um Arduino, que por sua vez está ligado ao hospedeiro via interface USB, com uso do protocolo Firmata. 
-- **Raspberyy Pi**: foi desenvolvida uma versão que permite o controle de sensores e atuadores que estejam conectados à interface GPIO do Raspberry Pi. 
+- **Raspberyy Pi**: o simulador pode ser compilado e executado no Raspberry Pi, controlando sensores e atuadores que estejam conectados à sua interface GPIO. 
 - **Python**: uma versão do simulador para uma extensão do processador Sapiens com um acumulador de 16 bits foi desenvolvida na linguagem python.
   
 ## Recursos Disponíveis
