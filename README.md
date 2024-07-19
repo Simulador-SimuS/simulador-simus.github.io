@@ -10,16 +10,16 @@ O uso de exemplos de programas em linguagem de montagem é enfatizado como cruci
 ## Características do Simulador
 
 No simulador SimuS mantivemos a interface básica do seu predecessor, o simulador Neanderwin, mas com o acréscimo de algumas funcionalidades. Desde o início do projeto nosso objetivo era facilitar ao máximo as atividades didáticas do professor e o apoio mais completo possível para as dificuldades comuns do aluno. Para isso foi disponibilizado um ambiente integrado para desenvolvimento, com versões para os sistemas operacionais Windows e Linux, com os seguintes módulos: 
-- Editor de textos integrado, que possibilita a abertura, edição e  salvamento  de  arquivos em linguagem de montagem.
-- Montador (assembler) também integrado, gerando o código  objeto final em  linguagem  de   montagem. Possui compatibilidade com programas escritos para os processadores Neander ou Neander-X.
-- Simulador da arquitetura, com possibilidade, além da visualização, de modificação dos  elementos   arquiteturais do processador, tais como registrador de instrução, apontador de instrução, apontador de pilha, acumulador, flags N, Z e C; além da execução passo-a-passo ou direta.
-- Módulo de depuração, definindo pontos de parada e variáveis em  memória para serem monitoradas,  em caso de mudança de valor a execução é interrompida.
-- Visualização e modificação da memória simulada, no formato hexadecimal os endereços e também para seu conteúdo, agora expandida para 64 Kbytes.
-- Ferramenta de  apoio  ao aprendizado de instruções, com  ajuda integrada ao editor de textos,  para  a geração de  código em  linguagem  de montagem  do processador Sapiens.
-- Utilitário para conversão de bases binária, decimal e hexadecimal.
-- Simulador de dispositivos de E/S,  que inclui os tradicionais painel com 8 chaves e visor hexadecimal, além de um teclado de 12 teclas e um “banner” de 16 linhas. Estes  dispositivos   são acessados no espaço de endereçamento de E/S convencional com as instruções IN e OUT.
-- Dispositivos  especiais como uma  console  virtual, acessada  pelo  mecanismo de TRAP descrito em detalhes na documentação. Com esse mecanismo   outros   módulos   mais complexos  possam   ser  facilmente   instalados,  sem necessidade  de   expor   esta   complexidade   para   osusuários.
-- Gerador/carregador de imagem da memória simulada, podendo ser salva em formato hexadecimal. Note que neste caso a compatibilidade entre o Simus e o Neanderwin não é mantida, ou seja, a imagem salvaem um simulador não pode ser carregada em outro.
+- **Editor de textos** integrado, que possibilita a abertura, edição e  salvamento  de  arquivos em linguagem de montagem.
+- **Montador (assembler)** também integrado, gerando o código  objeto final em  linguagem  de   montagem. Possui compatibilidade com programas escritos para os processadores Neander ou Neander-X.
+- **Simulador** da arquitetura, com possibilidade, além da visualização, de modificação dos  elementos   arquiteturais do processador, tais como registrador de instrução, apontador de instrução, apontador de pilha, acumulador, flags N, Z e C; além da execução passo-a-passo ou direta.
+- **Módulo de depuração**, definindo pontos de parada e variáveis em  memória para serem monitoradas,  em caso de mudança de valor a execução é interrompida.
+- **Visualização** e modificação da memória simulada, no formato hexadecimal os endereços e também para seu conteúdo, agora expandida para 64 Kbytes.
+- **Ferramenta de apoio** ao aprendizado de instruções, com  ajuda integrada ao editor de textos,  para  a geração de  código em  linguagem  de montagem  do processador Sapiens.
+- **Utilitário** para conversão de bases binária, decimal e hexadecimal.
+- **Simulador de dispositivos de E/S**,  que inclui os tradicionais painel com 8 chaves e visor hexadecimal, além de um teclado de 12 teclas e um “banner” de 16 linhas. Estes  dispositivos  são acessados no espaço de endereçamento de E/S convencional com as instruções IN e OUT.
+- **Dispositivos especiais** como uma  console  virtual, acessada  pelo  mecanismo de TRAP descrito em detalhes na documentação. Com esse mecanismo   outros   módulos   mais complexos  possam   ser  facilmente   instalados,  sem necessidade  de   expor   esta   complexidade   para   osusuários.
+- **Gerador/carregador de imagem** da memória simulada, podendo ser salva em formato hexadecimal. Note que neste caso a compatibilidade entre o Simus e o Neanderwin não é mantida, ou seja, a imagem salvaem um simulador não pode ser carregada em outro.
 
 O processador Sapiens tem um modelo de arquitetura cujo diagrama em blocos pode ser visalizado a seguir:
 
