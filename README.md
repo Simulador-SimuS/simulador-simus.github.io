@@ -29,7 +29,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
   
   Em breve estarão disponíveis no repositório alguns slides de apoio para o material do livro.
 
-  [Slides do Capítulo 1](./docs/Capítulo\ 1.pdf)
-
+- [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
+- [Slides do Capítulo 2](./docs/Capítulo 2.pdf)
 
 
