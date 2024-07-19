@@ -27,7 +27,9 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - Uma versão para uso no Raspberry Pi, permitindo o controle de sensores e atuadores conectados via GPIO. 
 - Uma versão em python, para uma extensão com acumulador de 16 bits.
   
-  Em breve estarão disponíveis no repositório alguns slides de apoio para o material do livro. 
+  Em breve estarão disponíveis no repositório alguns slides de apoio para o material do livro.
+
+  [Slides do Capítulo 1](./docs/Capítulo1.pdf)
 
 
 
