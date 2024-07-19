@@ -31,5 +31,12 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 
 - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
 - [Slides do Capítulo 2](./docs/Capítulo 2.pdf)
+- [Slides do Capítulo 3](./docs/Capítulo 3.pdf)
+- [Slides do Capítulo 4](./docs/Capítulo 4.pdf)
+- [Slides do Capítulo 5](./docs/Capítulo 5.pdf)
+- [Slides do Capítulo 6](./docs/Capítulo 6.pdf)
+- [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
+- [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
+
 
 
