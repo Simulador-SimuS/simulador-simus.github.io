@@ -45,5 +45,13 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
     - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
     - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06GNG42E6V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-06GNG42E6V');
+</script>
 
