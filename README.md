@@ -59,7 +59,6 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-06GNG42E6V');
 </script>
 
