@@ -1,3 +1,6 @@
+<meta name="description" content="Simulador Didático, Livro de Arquitetura de Computadores">
+<meta name="keywords" content="simulador, eletrônica, computação, assembly, linguagem de montagem, simulação, Linux, arquitetura de computadores, ensino, materiais">
+
 # Simulador SimuS
 
 ## Apresentação
