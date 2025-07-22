@@ -6,7 +6,7 @@
 ## Apresentação
 
 
-O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens**, detalhado no livro **Arquitetura e Organização de Computadores - Uma Introdução** (Editora LTC - 2024). Este livro é fruto da vasta experiência dos autores ao longo de anos ministrando cursos de graduação em áreas tecnológicas. Sua missão é apresentar, de maneira acessível, o funcionamento dos computadores a alunos de disciplinas de Organização ou Arquitetura de Computadores, abrangendo cursos como Bacharelado em Ciência da Computação, Engenharia de Computação, Bacharelado em Sistemas de Informação, Licenciatura em Computação, Cursos Superiores de Tecnologia e, mais recentemente, Ciência de Dados. Em 2025,o livro foi indicado como um dos cinco finalistas para o prêmio [Jabuti Acadêmico](https://www.premiojabuti.com.br/academico/semifinalistas-academico).
+O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens**, detalhado no livro **Arquitetura e Organização de Computadores - Uma Introdução** (Editora LTC - 2024). Este livro é fruto da vasta experiência dos autores ao longo de anos ministrando cursos de graduação em áreas tecnológicas. Sua missão é apresentar, de maneira acessível, o funcionamento dos computadores a alunos de disciplinas de Organização ou Arquitetura de Computadores, abrangendo cursos como Bacharelado em Ciência da Computação, Engenharia de Computação, Bacharelado em Sistemas de Informação, Licenciatura em Computação, Cursos Superiores de Tecnologia e, mais recentemente, Ciência de Dados. Em 2025, o livro foi indicado como um dos cinco finalistas para o prêmio [Jabuti Acadêmico](https://www.premiojabuti.com.br/academico/semifinalistas-academico).
 <br>
 <br>
 <table align="center">
