@@ -11,10 +11,10 @@ O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens*
 <table>
 <tr>
 <td>
-<img src="capa.jpg" name="Livro" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="70" height="100" />
+<img src="capa.jpg" name="Livro" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="105" height="150" />
 </td>
 <td>
-<img src="selo.jpg" name="Selo" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="100" height="100" />
+<img src="selo.jpg" name="Selo" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="150" height="150" />
 </td>
 </tr>
 </table>
