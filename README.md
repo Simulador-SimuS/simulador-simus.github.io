@@ -11,10 +11,10 @@ O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens*
 <table>
 <tr>
 <td>
-<img src="Livro.png" name="Livro" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="100" height="70" />
+<img src="capa.jpg" name="Livro" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="100" height="70" />
 </td>
 <td>
-<img src="Selo.png" name="Selo" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="100" height="70" />
+<img src="selo.jpg" name="Selo" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="100" height="70" />
 </td>
 </tr>
 </table>
@@ -37,7 +37,7 @@ No simulador SimuS mantivemos a interface básica do seu predecessor, o simulado
 
 O processador Sapiens tem um modelo de arquitetura cujo diagrama em blocos pode ser visalizado a seguir:
 
-<img src="Sapiens.png" name="SimuS" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="500" height="350" />
+<img src="sapiens.png" name="SimuS" data-align="bottom" data-hspace="1" data-vspace="1" data-border="0" width="500" height="350" />
 
 Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os quais destacamos:
 - **Arduino**: a possibilidade de controlar atuadores e sensores conectados aos pinos de um Arduino, que por sua vez está ligado ao hospedeiro via interface USB, com uso do protocolo Firmata. 
