@@ -48,7 +48,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
   
 ## Recursos Disponíveis
 
-- [Histórico do Livro])(docs/historia.md)
+- [Histórico do Livro](docs/historia.md)
 - [Manual do Sapiens](./simus.pdf)
 - [Simulador Simus](https://github.com/Simulador-Simus/SimuS)
 - [Versão HTML/JS do Simulador ** BETA **](./simus-v092.html)
