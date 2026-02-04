@@ -49,10 +49,10 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 ## Recursos Disponíveis
 
 - [Histórico do Livro](docs/historia.md)
-- [Manual do Sapiens](docs/SimuS.pdf)
+- [Manual do Processador Sapiens](docs/SimuS.pdf)
 - [Simulador SimuS](https://github.com/Simulador-Simus/SimuS)
-- [Versão HTML/JS do Simulador ** BETA **](./simus-v092.html)
-- [Manual da versão HTML](docs/Manual_SimuS.md)
+- [Versão HTML/JS do simulador SimuS ** BETA **](./simus-v092.html)
+- [Manual da versão HTML do SimuS](docs/Manual_SimuS.md)
 - [Código dos exemplos utilizados](https://github.com/Simulador-SimuS/SimuS/tree/master/Exemplos)
 - Slide de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
     - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
