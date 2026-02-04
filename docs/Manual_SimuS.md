@@ -6,7 +6,7 @@
 
 ## 1. Introdução
 
-O SimuS (Simulador Sapiens) é uma ferramenta educacional desenvolvida para simular o funcionamento do processador Sapiens 2.0. Este simulador permite aos estudantes escrever, compilar e executar programas em linguagem assembly, visualizando em tempo real o comportamento do processador, registradores, flags e memória.
+O SimuS (Simulador Sapiens) é uma ferramenta educacional desenvolvida para simular o funcionamento do processador Sapiens. Este simulador permite aos estudantes escrever, compilar e executar programas em linguagem assembly, visualizando em tempo real o comportamento do processador, registradores, flags e memória.
 
 O SimuS oferece recursos avançados de depuração, incluindo execução passo a passo, breakpoints, visualização de memória e portas de entrada/saída simuladas.
 
