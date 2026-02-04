@@ -73,11 +73,12 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
     - [Exercícios do Capítulo 7](./docs/Exercicios07.pdf)
     - [Exercícios do Capítulo 8](./docs/Exercicios08.pdf)
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-06GNG42E6V"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-06GNG42E6V');
+
+  gtag('config', 'G-5XWJPK4F3P');
 </script>
 
