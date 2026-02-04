@@ -45,7 +45,7 @@ Visualização do código compilado com recursos de depuração:
 - Exibe o código assembly com endereços de memória em hexadecimal
 - Destaque em amarelo na linha atual de execução (PC - Program Counter)
 - Rótulos (labels) exibidos em cor laranja para fácil identificação
-- Clique em qualquer linha para adicionar/remover breakpoint (marcado com círculo vermelho no endereço)
+- Clique em qualquer linha para adicionar/remover breakpoint (marcado em vermelho no endereço)
 - Rolagem automática para acompanhar a execução do programa
 
 ### 2.2. Painel Central - CPU e Controles
@@ -82,8 +82,8 @@ Caixa com fundo escuro exibindo o mnemônico da instrução atualmente apontada 
 
 Três indicadores visuais que mostram o estado dos flags do processador:
 
-- **N (Negativo):** Acende em vermelho quando o resultado da última operação é negativo (bit 7 = 1)
-- **Z (Zero):** Acende em verde quando o resultado da última operação é zero
+- **N (Negativo):** Acende em azul quando o resultado da última operação é negativo (bit 7 = 1)
+- **Z (Zero):** Acende em azul quando o resultado da última operação é zero
 - **C (Carry):** Acende em azul quando há overflow/carry na última operação aritmética
 
 #### 2.2.6. Portas de Entrada/Saída
@@ -91,8 +91,8 @@ Três indicadores visuais que mostram o estado dos flags do processador:
 Interface simulada de periféricos com quatro componentes:
 
 - **Banner - Texto:** Display de texto largo que exibe caracteres ASCII enviados pela instrução OUT 3. Suporta múltiplas linhas e texto bidirecional. Exemplo: *"Sapiens 2.0"*.
-- **Entrada (Hex):** Campo de texto onde o usuário digita valores hexadecimais (00-FF) que serão lidos pela instrução IN 0. Pressione ENTER após digitar para confirmar o valor. Um LED verde acende quando há dado disponível.
-- **Saída (OUT) - Hex:** Display hexadecimal que mostra o último valor enviado pela instrução OUT 0. Formato: XX.
+- **Entrada (IN) - Hex/Bin:** Campo de texto onde o usuário digita valores hexadecimais (00-FF) ou binários (8 bits) que serão lidos pela instrução IN 0. Pressione ENTER após digitar para confirmar o valor. Um LED verde acende quando há dado disponível.
+- **Saída (OUT) - Hex/Bin:** Display hexadecimal/binário que mostra o último valor enviado pela instrução OUT 0. Formato: XX ou XXXXXXXX.
 - **LED de Status:** Indicador verde que acende quando há dado digitado e confirmado na entrada, disponível para leitura via IN 1 (porta de status).
 
 ### 2.3. Painel Direito - Visualização da Memória
@@ -105,8 +105,10 @@ Controles no topo do painel de memória:
 
 - **Botão ‹ (Anterior):** Retrocede 256 bytes (16 linhas) na visualização
 - **Campo de Endereço:** Caixa de texto central mostrando o endereço inicial da visualização em hexadecimal (formato: XXXX). Você pode digitar um endereço e pressionar ENTER para navegar diretamente.
-- **Botão › (Próximo):** Avança 256 bytes (16 linhas) na visualização
-- **Botão PC:** Navega automaticamente para o endereço atual do Program Counter, centralizando a visualização na instrução sendo executada
+- **Botão › (Próximo):** Avança 256 bytes (16 linhas) na visualização.
+- **Botão < (Anterior):** Recua 256 bytes (16 linhas) na visualização.
+- **Botão PC:** Navega automaticamente para o endereço atual do Program Counter, centralizando a visualização na instrução sendo executada.
+- - **Botão SP:** Navega automaticamente para o endereço atual do Stack Pointer, centralizando a visualização na pilha do programa.
 
 #### 2.3.2. Grade de Memória
 
@@ -116,7 +118,8 @@ Visualização em grade hexadecimal com as seguintes características:
 - Coluna da esquerda mostra o endereço base de cada linha em hexadecimal
 - Cabeçalho superior indica o offset (+0 a +7) para cada coluna
 - Bytes com valor 00 são exibidos em cinza claro para facilitar identificação
-- Byte apontado pelo PC é destacado com fundo amarelo e borda dourada
+- Byte apontado pelo PC é destacado com fundo amarelo
+- Byte apontado pelo SP é destacado com fundo lilás 
 - Fonte monoespaçada garante alinhamento perfeito dos valores
 
 ---
@@ -254,20 +257,28 @@ O Sapiens suporta quatro modos de endereçamento, identificados pelos 2 bits mai
 
 | Bits | Modo | Exemplo | Operação | Descrição |
 |------|------|---------|----------|-----------|
-| 00 | Direto | `LDA 50` | `AC = mem[50]` | O operando é o endereço na memória |
-| 01 | Indireto | `LDA @50` | `AC = mem[mem[50]]` | O operando aponta para endereço que contém o endereço final |
-| 10 | Indexado | `LDA 50,X` | `AC = mem[50 + X]` | Adiciona registrador X ao endereço base (X = byte na posição PC+2) |
-| 11 | Imediato | `LDA #50` | `AC = 50` | O operando é o valor literal a ser usado |
+| 00 | Direto | `LDA 50` | `AC = mem[50]` | O operando é o endereço na memória do dado|
+| 01 | Indireto | `LDA @50` | `AC = mem[mem[50]]` | O operando aponta para endereço que contém o endereço final do dado|
+| 10 | Imediato 8 bits | `LDA #10` | `AC = 10` | O operando é o byte seguinte à instrução |
+| 11 | Imediato 16 bits| `LDS #1000` | `SP = 1000` | O operando são os dois bytes seguintes à instrução |
 
 ### Observações sobre Endereçamento:
 
 - Instruções sem operando (NOP, RET, PUSH, POP, etc.) ignoram o modo de endereçamento
 - Modo Indexado não está totalmente implementado - use com cautela
-- Prefixo @ indica indireto, # indica imediato, ,X indica indexado, ausência indica direto
+- Prefixo @ indica indireto, # indica imediato, ausência indica direto
 
 ---
 
-## 7. Diretivas do Assembler
+## 7. Formato dos operandos
+
+O Sapiens suporta vários tipos de formatos para os operando das instruçõoes:
+
+- Decimal: 10 - O número sem decoradores
+- Binário: 0b01010101 ou 01010101B
+- Hexadecimal: 0x05 ou 05H (tem começar com digito)
+
+## 8. Diretivas do Assembler
 
 O assembler do SimuS reconhece as seguintes diretivas:
 
@@ -278,6 +289,7 @@ O assembler do SimuS reconhece as seguintes diretivas:
 | `DB valor` | Define byte (8 bits) | `DB #FF` | Armazena o byte FF na memória |
 | `DW valor` | Define word (16 bits) | `DW #1234` | Armazena word 1234 (little-endian) |
 | `DS quantidade` | Define espaço (reserva bytes) | `DS 10` | Reserva 10 bytes zerados |
+| `LABEL: EQU valor` | Define uma constante (: é opcional) | `TESTE: EQU 10` | TESTE será igual 10 |
 
 ### Uso de Rótulos (Labels):
 
@@ -290,14 +302,14 @@ LOOP:
 ```
 
 - Rótulos devem começar com letra e podem conter letras, números e underscore
-- São automaticamente convertidos para maiúsculas pelo assembler
+- São automaticamente convertidos para maiúsculas pelo montador
 - Podem ser usados como operandos em instruções de salto e acesso à memória
 
 ---
 
-## 8. Exemplos de Programas
+## 9. Exemplos de Programas
 
-### 8.1. Eco Simples
+### 9.1. Eco Simples
 
 Programa que aguarda entrada do usuário e ecoa o valor:
 
@@ -313,7 +325,7 @@ LOOP:
 END
 ```
 
-### 8.2. Contador de 0 a 9
+### 9.2. Contador de 0 a 9
 
 Conta de 0 a 9 e para:
 
@@ -330,7 +342,7 @@ LOOP:
 END
 ```
 
-### 8.3. Sub-rotina com Pilha
+### 9.3. Sub-rotina com Pilha
 
 Demonstra uso de JSR, RET e PUSH/POP:
 
@@ -353,7 +365,7 @@ END
 
 ---
 
-## 9. Resolução de Problemas Comuns
+## 10. Resolução de Problemas Comuns
 
 ### Erro: "Instrução Inválida"
 - Verifique se o mnemônico está escrito corretamente. Lembre-se que o assembler não diferencia maiúsculas de minúsculas.
@@ -375,7 +387,7 @@ END
 
 ---
 
-## 10. Dicas e Boas Práticas
+## 11. Dicas e Boas Práticas
 
 - **Use comentários generosamente:** Documente o propósito de cada seção do código com linhas iniciadas por ponto e vírgula (;).
 - **Organize com rótulos:** Use nomes descritivos para rótulos (LOOP, INICIO, FIM, CALCULAR, etc.) para tornar o código mais legível.
@@ -388,9 +400,9 @@ END
 
 ---
 
-## 11. Conclusão
+## 12. Conclusão
 
-O SimuS v0.7 é uma ferramenta completa para aprendizado de arquitetura de computadores e programação em assembly. Através de sua interface intuitiva e recursos avançados de depuração, estudantes podem experimentar conceitos fundamentais como:
+O SimuS é uma ferramenta completa para aprendizado de arquitetura de computadores e programação em assembly. Através de sua interface intuitiva e recursos avançados de depuração, estudantes podem experimentar conceitos fundamentais como:
 
 - Ciclo de busca-decodificação-execução
 - Funcionamento de registradores e flags
