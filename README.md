@@ -52,7 +52,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - [Versão executável do simulador SimuS](https://github.com/Simulador-Simus/SimuS)
 - [Versão Web do simulador SimuS (Beta)](./simus-v093.html)
 - [Manual da versão Web do SimuS](docs/Manual_SimuS.md)
-- [Colabore respondendo ao uestionário de avaliação do simulador SimuS-Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)
+- [Colabore respondendo ao questionário de avaliação do SimuS-Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)
 - [Código dos exemplos utilizados](https://github.com/Simulador-SimuS/SimuS/tree/master/Exemplos)
 - Slide de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
     - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
