@@ -247,7 +247,23 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 |-----------|------|-----------|
 | NOP | No Operation | Não faz nada (pode ser usado para timing) |
 | HLT | Halt | Para a execução do processador |
-| TRAP | Trap | Gera interrupção (não implementado nesta versão) |
+| TRAP | Trap | Gera chamada de serviço |
+
+
+#### Operações de TRAP Disponíveis:
+
+- O número do TRAP é passado no acumulador. Parâmetros adicionais são passados no endereço de memória do operando.
+
+| Instrução | Função |
+|-----------|--------|
+| #0 | Limpa o termminal da console |
+| #11 | Lê caractere do terminal e salva no acumulador e endereço de memória do operando.|
+| #2 | Escreve um caractere do endereço de memória do operando no terminal. |
+| #3 | Lê uma string do terminal e salva no endereço de memória do operando. |
+| #4 | Escreve uma cadeira a partir do endereço operando (até achar um NULL) |
+| #5 | Delay (Aguarda de 0 a 65535 ms) |
+| #6 | Beep (Sintetizador de Áudio). Recebe frequencia e duração como parâmetros |
+| #7 | Retorna um número pseudo-aleatório entre 0 e 99 no acumulador. |
 
 ---
 
