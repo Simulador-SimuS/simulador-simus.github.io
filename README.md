@@ -50,7 +50,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
 - [Manual do processador Sapiens](docs/SimuS.pdf)
 - [Versão executável do simulador SimuS](https://github.com/Simulador-Simus/SimuS)
-- [SimuS Web (Beta)](./simus-v096.html)
+- [SimuS Web (Beta)](./simus-v0961.html)
 - [Manual de usuário do SimuS Web](docs/manual_simus.md)
 - [Versión en español del manual de usuario de SimuS Web](docs/manual_simus_es.md)
 - [English version of the SimuS Web User's Manual](docs/manual_simus_en.md)
