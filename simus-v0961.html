@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimuS v0.96</title>
+    <title>SimuS v0.95</title>
     <style>
     /* ESTILOS CSS PARA INTERFACE DE USUÁRIO */
         :root {
@@ -678,13 +678,13 @@
 <body>
     <!-- INICIO DO CODIGO HTML PARA FORMATAÇÂO DA INTERFACE DE USUÁRIO -->
     <header>       
-        <h1>SimuS<span style="font-size:0.8em; color:#64748b;"> (v0.96)</span></h1>
+        <h1>SimuS<span style="font-size:0.8em; color:#64748b;"> (v0.95)</span></h1>
         <div style="font-size: 0.8rem; color: #64748b;" data-i18n="version_lbl">Versão com TRAP Funcional</div>
         <div>
         <div id="seletor-idioma" style="display:flex; gap:8px; align-items:center;">
             <!-- Bandeira do Brasil -->
             <svg id="lang-pt" onclick="mudarIdioma('pt')" title="Português"
-                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:3px solid transparent; box-sizing:border-box;"
+                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:2px solid transparent; box-sizing:border-box;"
                  xmlns="http://www.w3.org/2000/svg">
                 <rect width="36" height="24" fill="#009c3b"/>
                 <polygon points="18,2 34,12 18,22 2,12" fill="#fedf00"/>
@@ -694,7 +694,7 @@
             </svg>
             <!-- Bandeira da Inglaterra (Reino Unido) -->
             <svg id="lang-en" onclick="mudarIdioma('en')" title="English"
-                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:3px solid transparent; box-sizing:border-box;"
+                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:2px solid transparent; box-sizing:border-box;"
                  xmlns="http://www.w3.org/2000/svg">
                 <rect width="36" height="24" fill="#012169"/>
                 <!-- Diagonais brancas -->
@@ -712,7 +712,7 @@
             </svg>
             <!-- Bandeira da Espanha -->
             <svg id="lang-es" onclick="mudarIdioma('es')" title="Español"
-                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:3px solid transparent; box-sizing:border-box;"
+                 width="36" height="24" viewBox="0 0 36 24" style="cursor:pointer; border-radius:3px; border:2px solid transparent; box-sizing:border-box;"
                  xmlns="http://www.w3.org/2000/svg">
                 <rect width="36" height="24" fill="#AA151B"/>
                 <rect y="6" width="36" height="12" fill="#F1BF00"/>
@@ -885,7 +885,7 @@ END
     <script>
         const i18n = {    // Dicionário de Idionas
             pt: {
-                titulo: "SimuS v0.96",
+                titulo: "SimuS v0.95",
                 btn_run: "Executar",
                 btn_step: "Passo",
                 btn_reset: "Reset",
@@ -923,7 +923,7 @@ END
                 trap_not_waiting: "A CPU não está aguardando dados..."
             },
             en: {
-                titulo: "SimuS v0.96",
+                titulo: "SimuS v0.95",
                 btn_run: "Run",
                 btn_step: "Step",
                 btn_reset: "Reset",
@@ -961,7 +961,7 @@ END
                 trap_not_waiting: "CPU is not waiting for input..."
             },
             es: {
-                titulo: "SimuS v0.96",
+                titulo: "SimuS v0.95",
                 btn_run: "Ejecutar",
                 btn_step: "Paso",
                 btn_reset: "Reiniciar",
@@ -1011,8 +1011,8 @@ END
             ['pt','en','es'].forEach(l => {
                 const f = document.getElementById('lang-' + l);
                 if (f) f.style.border = (l === novoLang)
-                    ? '3px solid var(--accent-color, #3b82f6)'  
-                    : '3px solid transparent';
+                    ? '2px solid var(--accent-color, #3b82f6)'
+                    : '2px solid transparent';
             });
             const elementos = document.querySelectorAll('[data-i18n]');
             elementos.forEach(el => {
@@ -1449,16 +1449,14 @@ END
                         break;
                     }
                     case OPS.SHL: {
-                        let oc = this.c ? 1 : 0;
-                        this.c = (this.ac & 0x80) !== 0;
-                        this.ac = ((this.ac << 1) | oc) & 0xFF;
+                        this.c = (this.ac & 0x80) !== 0;  // carry recebe o bit 7
+                        this.ac = (this.ac << 1) & 0xFF;  // desloca; bit 0 = 0
                         this.updateFlags(this.ac);
                         break;
                     }
                     case OPS.SHR: {
-                        let oc = this.c ? 1 : 0;
-                        this.c = (this.ac & 0x01) !== 0;
-                        this.ac = ((this.ac >> 1) | (oc << 7)) & 0xFF;
+                        this.c = (this.ac & 0x01) !== 0;  // carry recebe o bit 0
+                        this.ac = (this.ac >> 1) & 0xFF;  // desloca; bit 7 = 0
                         this.updateFlags(this.ac);
                         break;
                     }
@@ -2789,7 +2787,7 @@ END
         // Destaca a bandeira do idioma padrão ao carregar
         document.addEventListener('DOMContentLoaded', () => {
             const f = document.getElementById('lang-pt');
-            if (f) f.style.border = '3px solid var(--accent-color, #3b82f6)';
+            if (f) f.style.border = '2px solid var(--accent-color, #3b82f6)';
         });
     </script>
 </body>
