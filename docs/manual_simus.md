@@ -105,10 +105,10 @@ Exibe o conteúdo da memória RAM em formato hexadecimal com navegação:
 
 Controles no topo do painel de memória:
 
-- **Botão ‹ (Anterior):** Retrocede 256 bytes (16 linhas) na visualização
+- **Botão ‹ (Anterior):** Retrocede 256 bytes (32 linhas) na visualização
 - **Campo de Endereço:** Caixa de texto central mostrando o endereço inicial da visualização em hexadecimal (formato: XXXX). Você pode digitar um endereço e pressionar ENTER para navegar diretamente.
-- **Botão › (Próximo):** Avança 256 bytes (16 linhas) na visualização.
-- **Botão < (Anterior):** Recua 256 bytes (16 linhas) na visualização.
+- **Botão › (Próximo):** Avança 256 bytes (32 linhas) na visualização.
+- **Botão < (Anterior):** Recua 256 bytes (32 linhas) na visualização.
 - **Botão PC:** Navega automaticamente para o endereço atual do Program Counter, centralizando a visualização na instrução sendo executada.
 - - **Botão SP:** Navega automaticamente para o endereço atual do Stack Pointer, centralizando a visualização na pilha do programa.
 
@@ -116,7 +116,7 @@ Controles no topo do painel de memória:
 
 Visualização em grade hexadecimal com as seguintes características:
 
-- Exibe 16 linhas de 8 bytes cada (128 bytes totais por tela)
+- Exibe 32 linhas de 8 bytes cada (256 bytes totais por tela)
 - Coluna da esquerda mostra o endereço base de cada linha em hexadecimal
 - Cabeçalho superior indica o offset (+0 a +7) para cada coluna
 - Bytes com valor 00 são exibidos em cinza claro para facilitar identificação
