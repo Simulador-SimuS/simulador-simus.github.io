@@ -1,0 +1,446 @@
+# SimuS
+## Sapiens Processor Simulator
+### User Manual
+
+---
+
+## 1. Introduction
+
+SimuS (Sapiens Simulator) is an educational tool developed to simulate the operation of the Sapiens processor. This simulator allows students to write, compile, and execute programs in assembly language, visualizing the behavior of the processor, registers, flags, and memory in real time.
+
+SimuS offers advanced debugging features, including step-by-step execution, breakpoints, memory visualization, and simulated input/output ports.
+
+---
+
+## 2. User Interface
+
+The user interface language can be set to Portuguese, English, or Spanish by clicking one of the flags located in the upper corner of the main window.
+
+The SimuS interface is divided into three main panels, each with specific functions to facilitate program development and debugging.
+
+### 2.1. Left Panel - Editor and Execution
+
+This panel contains three tabs that allow you to edit code, view errors, and monitor execution:
+
+#### 2.1.1. Editor Tab
+
+An assembly code editing area with the following features:
+
+- Text editor with syntax highlighting for assembly code.
+- Dark background to reduce visual fatigue during programming.
+- Monospaced font (Consolas) for better code alignment.
+- Support for comments (lines starting with a semicolon `;`).
+
+#### 2.1.2. Errors Tab
+
+Displays error messages generated during compilation:
+
+- Lists all errors found in the source code.
+- Each error shows the line number and a description of the issue.
+- Clicking an error positions the cursor on the corresponding line in the editor.
+- A red badge on the tab title indicates the number of errors found.
+
+#### 2.1.3. Execution Tab
+
+Visualization of the compiled code with debugging resources:
+
+- Displays the assembly code along with memory addresses in hexadecimal.
+- The current line of execution (PC - Program Counter) is highlighted in yellow.
+- Labels are displayed in orange for easy identification.
+- Click on any line to add/remove a breakpoint (marked in red on the address).
+- Automatic scrolling to follow the program execution.
+
+### 2.2. Central Panel - CPU and Controls
+
+This panel concentrates all execution controls and the visualization of the CPU state:
+
+#### 2.2.1. Control Buttons
+
+Five distinctly colored buttons to control execution:
+
+- **Step (Orange):** Executes a single instruction and pauses. Ideal for detailed debugging.
+- **Run (Green):** Executes the program continuously at normal speed (50ms per instruction). It stops automatically at breakpoints or when encountering an HLT instruction.
+- **Turbo (Pink):** Executes the program at high speed (1000 instructions per cycle). Useful for long programs. It also respects breakpoints.
+- **Stop (Red):** Interrupts execution in any mode (Run or Turbo).
+- **Reset (Black):** Resets the processor to its initial state after an HLT. It restores the PC, registers, and I/O ports, but preserves the memory contents.
+
+#### 2.2.2. Status Bar
+
+Displays the current state of the simulator in gray text below the control buttons. Messages include: *"Ready"*, *"Running..."*, *"TURBO - Running..."*, *"HALT - Program Finished"*, among others.
+
+#### 2.2.3. Registers
+
+Three boxes displaying the values of the main registers in hexadecimal:
+
+- **AC (Accumulator):** 8-bit register used for arithmetic and logical operations (format: XX).
+- **PC (Program Counter):** 16-bit register that points to the address of the next instruction (format: XXXX).
+- **SP (Stack Pointer):** 16-bit register that points to the top of the stack (format: XXXX, initialized to FFFF).
+
+#### 2.2.4. Current Instruction
+
+A box with a dark background displaying the mnemonic of the instruction currently pointed to by the PC. Example: `LDA #FF`. This yellow-gold highlighted view makes it easy to track execution.
+
+#### 2.2.5. Flags (Indicators)
+
+Three visual indicators showing the state of the processor flags:
+
+- **N (Negative):** Lights up in blue when the result of the last operation is negative (bit 7 = 1).
+- **Z (Zero):** Lights up in blue when the result of the last operation is zero.
+- **C (Carry):** Lights up in blue when there is an overflow/carry in the last arithmetic operation.
+
+#### 2.2.6. Input/Output Ports
+
+Simulated peripheral interface with four components:
+
+- **Banner - Text:** A wide text display that shows ASCII characters sent by the OUT 3 instruction. It supports multiple lines and bidirectional text. Example: *"Sapiens 2.0"*.
+- **Input (IN) - Hex/Bin:** A text field where the user types hexadecimal (00-FF) or binary (8-bit) values to be read by the IN 0 instruction. Press ENTER after typing to confirm the value. A green LED lights up when data is available.
+- **Output (OUT) - Hex/Bin:** A hexadecimal/binary display showing the last value sent by the OUT 0 instruction. Format: XX or XXXXXXXX.
+- **Status LED:** A green indicator that lights up when data is entered and confirmed in the input, making it available for reading via IN 1 (status port).
+
+### 2.3. Right Panel - Memory Visualization
+
+Displays the contents of the RAM memory in hexadecimal format with navigation features:
+
+#### 2.3.1. Navigation Bar
+
+Controls at the top of the memory panel:
+
+- **Button ‹ (Previous):** Rewinds 256 bytes (32 lines) in the view.
+- **Address Field:** A central text box showing the starting address of the view in hexadecimal (format: XXXX). You can type an address and press ENTER to navigate directly to it.
+- **Button › (Next):** Advances 256 bytes (32 lines) in the view.
+- **Button < (Previous):** Moves back 256 bytes (32 lines) in the view.
+- **PC Button:** Automatically navigates to the current Program Counter address, centering the view on the instruction being executed.
+- **SP Button:** Automatically navigates to the current Stack Pointer address, centering the view on the program stack.
+
+#### 2.3.2. Memory Grid
+
+Visualization in a hexadecimal grid with the following characteristics:
+
+- Displays 32 lines of 8 bytes each (256 total bytes per screen).
+- The left column shows the base address of each line in hexadecimal.
+- The top header indicates the offset (+0 to +7) for each column.
+- Bytes with a value of 00 are displayed in light gray for easy identification.
+- The byte pointed to by the PC is highlighted with a yellow background.
+- The byte pointed to by the SP is highlighted with a lilac background.
+- A monospaced font ensures perfect alignment of the values.
+
+---
+
+## 3. File Toolbar
+
+Located at the top of the left panel, it offers three buttons for file management:
+
+- **📂 Open:** Opens an assembly file from the disk (.txt, .asm, .sap). The content is loaded into the editor, replacing the current code. The file name is displayed on the Editor tab.
+- **💾 Save As...:** Saves the current code from the editor to a file on disk. It opens a browser dialog to choose the name and location. Default extension: .asm.
+- **✔ Compile:** Compiles the assembly code in the editor. If there are errors, the Errors tab is automatically activated with the list of issues. If compilation is successful, the compiled code is loaded into memory, and the Execution tab is shown. The PC is positioned at the address defined by the ORG directive.
+
+---
+
+## 4. Typical Workflow
+
+Follow these steps to develop and execute programs in SimuS:
+
+1. **Edit the Code:** In the Editor tab, write your assembly program. Use comments (;) to document the code. Remember to include the ORG directive to define the starting address and END to mark the end of the program.
+
+2. **Compile:** Click the ✔ Compile button. If there are errors, correct them as indicated in the Errors tab and compile again.
+
+3. **Set Breakpoints (Optional):** In the Execution tab, click on the lines where you want to pause execution. A red circle will appear on the address.
+
+4. **Run:** Choose an execution mode:
+   - Step: For detailed, instruction-by-instruction debugging.
+   - Run: For normal speed execution with visual updates.
+   - Turbo: For long programs, running at maximum speed.
+
+5. **Monitor Execution:** Observe the registers, flags, memory, and I/O ports updating in real time. The current line is highlighted in yellow in the Execution tab.
+
+6. **Interact with I/O:** When the program executes IN 0, type a hexadecimal value into the Input (Hex) field and press ENTER. Values sent via OUT are displayed automatically.
+
+7. **Finish:** The program stops automatically when it encounters an HLT. Use the Reset button to restart and run again.
+
+8. **Save:** Use 💾 Save As... to save your work to a file.
+
+---
+
+## 5. Sapiens Instruction Set
+
+The Sapiens processor implements the following categories of instructions:
+
+### 5.1. Data Transfer Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| LDA | Load Accumulator | Loads AC with a value from memory or an immediate value |
+| STA | Store Accumulator | Stores AC into memory |
+| LDS | Load Stack Pointer | Loads SP with a 16-bit value |
+| STS | Store Stack Pointer | Stores SP into memory (16 bits) |
+
+### 5.2. Arithmetic Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| ADD | Addition | AC = AC + operand (updates flags) |
+| ADC | Add with Carry | AC = AC + operand + C (updates flags) |
+| SUB | Subtraction | AC = AC - operand (updates flags) |
+| SBC | Subtract with Carry | AC = AC - operand - C (updates flags) |
+
+### 5.3. Logical Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| AND | Logical AND | AC = AC & operand (updates flags) |
+| OR | Logical OR | AC = AC \| operand (updates flags) |
+| XOR | Exclusive OR | AC = AC ^ operand (updates flags) |
+| NOT | Logical NOT | AC = ~AC (updates flags) |
+
+### 5.4. Shift Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| SHL | Shift Left | Shifts AC 1 bit to the left (bit 0 = 0, C receives bit 7) |
+| SHR | Shift Right | Shifts AC 1 bit to the right logically (bit 7 = 0, C receives bit 0) |
+| SRA | Shift Right Arithmetic | Shifts AC 1 bit to the right arithmetically (maintains bit 7) |
+
+### 5.5. Flow Control Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| JMP | Jump | Jumps unconditionally to an address |
+| JZ | Jump if Zero | Jumps if flag Z = 1 |
+| JNZ | Jump if Not Zero | Jumps if flag Z = 0 |
+| JN | Jump if Negative | Jumps if flag N = 1 |
+| JP | Jump if Positive | Jumps if flag N = 0 |
+| JC | Jump if Carry | Jumps if flag C = 1 |
+| JNC | Jump if No Carry | Jumps if flag C = 0 |
+
+### 5.6. Subroutine Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| JSR | Jump to Subroutine | Saves PC to the stack and jumps to the subroutine |
+| RET | Return | Returns from a subroutine (recovers PC from the stack) |
+
+### 5.7. Stack Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| PUSH | Push to Stack | Pushes AC onto the stack (mem[SP] = AC, then SP--) |
+| POP | Pop from Stack | Pops from the stack to AC (SP++, then AC = mem[SP]) |
+
+### 5.8. Input/Output Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| IN | Input | Reads data from the specified port into AC |
+| OUT | Output | Sends AC to the specified port |
+
+#### Available I/O Ports:
+
+| Instruction | Function |
+|-------------|----------|
+| IN 0 | Reads the hexadecimal value typed by the user |
+| IN 1 | Reads input status (1 = data available, 0 = no data) |
+| OUT 0 | Sends AC to the hexadecimal output display |
+| OUT 2 | Clears the text banner |
+| OUT 3 | Sends an ASCII character to the text banner (appends to the end) |
+
+### 5.9. Special Instructions
+
+| Mnemonic | Name | Description |
+|-----------|------|-------------|
+| NOP | No Operation | Does nothing (can be used for timing) |
+| HLT | Halt | Stops the processor execution |
+| TRAP | Trap | Generates a service call |
+
+#### Available TRAP Operations:
+
+- The TRAP number is passed in the accumulator. Additional parameters are passed in the memory address of the operand.
+
+| Instruction | Function |
+|-------------|----------|
+| #0 | Clears the console terminal |
+| #11 | Reads a character from the terminal and saves it in the accumulator and the operand's memory address |
+| #2 | Writes a character from the operand's memory address to the terminal |
+| #3 | Reads a string from the terminal and saves it at the operand's memory address |
+| #4 | Writes a string starting from the operand address (until a NULL is found) |
+| #5 | Delay (Waits from 0 to 65535 ms) |
+| #6 | Beep (Audio Synthesizer). Receives frequency and duration as parameters |
+| #7 | Returns a pseudo-random number between 0 and 99 in the accumulator |
+
+---
+
+## 6. Addressing Modes
+
+Sapiens supports four addressing modes, identified by the 2 most significant bits of the opcode:
+
+| Bits | Mode | Example | Operation | Description |
+|------|------|---------|-----------|-------------|
+| 00 | Direct | `LDA 50` | `AC = mem[50]` | The operand is the memory address of the data |
+| 01 | Indirect | `LDA @50` | `AC = mem[mem[50]]` | The operand points to an address containing the final address of the data |
+| 10 | 8-bit Immediate | `LDA #10` | `AC = 10` | The operand is the byte following the instruction |
+| 11 | 16-bit Immediate| `LDS #1000` | `SP = 1000` | The operand consists of the two bytes following the instruction |
+
+### Notes on Addressing:
+
+- Instructions without an operand (NOP, RET, PUSH, POP, etc.) ignore the addressing mode.
+- Indexed Mode is not fully implemented — use with caution.
+- The `@` prefix indicates indirect addressing, `#` indicates immediate, and its absence indicates direct addressing.
+
+---
+
+## 7. Operand Formats
+
+Sapiens supports several types of formats for instruction operands:
+
+- Decimal: 10 - The number without decorators.
+- Binary: 0b01010101 or 01010101B.
+- Hexadecimal: 0x05 or 05H (must start with a digit).
+
+---
+
+## 8. Assembler Directives
+
+The SimuS assembler recognizes the following directives:
+
+| Directive | Description | Example | Effect |
+|-----------|-------------|---------|--------|
+| `ORG address` | Defines the starting address of the program | `ORG 0` | Program starts at address 0 |
+| `END` | Marks the end of the source code | `END` | Last line of the file |
+| `DB value` | Defines a byte (8 bits) | `DB #FF` | Stores the byte FF in memory |
+| `DW value` | Defines a word (16 bits) | `DW #1234` | Stores the word 1234 (little-endian) |
+| `DS quantity` | Defines space (reserves bytes) | `DS 10` | Reserves 10 zeroed bytes |
+| `LABEL: EQU value` | Defines a constant (: is optional) | `TESTE: EQU 10`| TESTE will be equal to 10 |
+
+### Use of Labels:
+
+Labels can be defined before any instruction or directive, ending with a colon:
+
+```assembly
+LOOP:
+    LDA VALUE
+    JNZ LOOP
+
+```
+
+* Labels must start with a letter and can contain letters, numbers, and underscores.
+* They are automatically converted to uppercase by the assembler.
+* They can be used as operands in jump and memory access instructions.
+
+---
+
+## 9. Code Examples
+
+### 9.1. Simple Echo
+
+A program that waits for user input and echoes the value back:
+
+```assembly
+; Echo Program
+ORG 0
+LOOP:
+    IN 1          ; Read status
+    JZ LOOP       ; Wait for data
+    IN 0          ; Read value
+    OUT 0         ; Display value
+    HLT
+END
+
+```
+
+### 9.2. Counter from 0 to 9
+
+Counts from 0 to 9 and stops:
+
+```assembly
+; Counter
+ORG 0
+    LDA #0        ; Start at 0
+LOOP:
+    OUT 0         ; Show value
+    ADD #1        ; Increment
+    SUB #10       ; Compare with 10
+    JNZ LOOP      ; Continue if != 10
+    HLT
+END
+
+```
+
+### 9.3. Subroutine with Stack
+
+Demonstrates the use of JSR, RET, and PUSH/POP:
+
+```assembly
+; Subroutine
+ORG 0
+    LDA #42
+    JSR SAVE      ; Call subroutine
+    OUT 0         ; Show result
+    HLT
+
+SAVE:
+    PUSH          ; Save AC
+    LDA #99
+    OUT 0         ; Show 99
+    POP           ; Restore AC (42)
+    RET
+END
+
+```
+
+---
+
+## 10. Troubleshooting Common Issues
+
+### Error: "Invalid Instruction"
+
+* Check if the mnemonic is written correctly. Remember that the assembler is case-insensitive.
+
+### Error: "Undefined Label"
+
+* Make sure that the label used in the instruction was defined somewhere in the code with a colon (:).
+
+### Program does not execute after compiling
+
+* Check if you clicked Compile before trying to run. The green status light should show "Loaded" in the message.
+
+### Breakpoint does not work
+
+* Breakpoints only work on lines with executable instructions. Empty lines, comments, and directives cannot have breakpoints.
+
+### Memory does not update during execution
+
+* In Turbo mode, the interface does not update at every instruction to maintain maximum speed. Use Run or Step mode to see changes in real time.
+
+### IN does not read the typed value
+
+* Remember to press ENTER after typing the hexadecimal value. The green LED must light up, indicating that the data is ready.
+
+---
+
+## 11. Tips and Best Practices
+
+* **Use comments generously:** Document the purpose of each section of code using lines starting with a semicolon (;).
+* **Organize with labels:** Use descriptive names for labels (LOOP, START, END, CALCULATE, etc.) to make the code more readable.
+* **Test incrementally:** Compile and test small parts of the program before adding more features.
+* **Use breakpoints strategically:** Place breakpoints at critical points (start of loops, subroutine calls, decisions) to facilitate debugging.
+* **Monitor flags:** Observe N, Z, and C during execution to understand how operations affect the processor state.
+* **Always end with HLT:** Ensure that every execution path ends with an HLT instruction to avoid unpredictable behavior.
+* **Save your work frequently:** Use the 💾 Save As... button regularly so you don’t lose progress.
+* **Check the Memory tab:** During debugging, use the PC button to quickly navigate to the current instruction in the memory view.
+
+---
+
+## 12. Conclusion
+
+SimuS is a complete tool for learning computer architecture and assembly programming. Through its intuitive interface and advanced debugging features, students can experiment with fundamental concepts such as:
+
+* The fetch-decode-execute cycle
+* The operation of registers and flags
+* Memory organization
+* The stack and subroutine calls
+* Data input and output
+* Different addressing modes
+
+This manual covers the essential aspects of the simulator. For additional questions or technical support, consult the Sapiens processor documentation or contact the developer.
+
+**Happy studying and happy programming!**
+
