@@ -14,6 +14,8 @@ O SimuS oferece recursos avançados de depuração, incluindo execução passo a
 
 ## 2. Interface do Usuário
 
+A linguagem da interface de usuário pode ser selecionada para português, inglês ou espanhol clicando-se em uma das bandeiras no canto superior da janela principal.
+
 A interface do SimuS está dividida em três painéis principais, cada um com funções específicas para facilitar o desenvolvimento e depuração de programas.
 
 ### 2.1. Painel Esquerdo - Editor e Execução
