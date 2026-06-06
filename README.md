@@ -3,7 +3,7 @@
 
 # 1. Simulador SimuS 
 
-## Apresentação
+## 1.1 Apresentação
 <br>
 <br>
 <center>
@@ -24,7 +24,7 @@ O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens*
 
 O uso de exemplos de programas em linguagem de montagem é enfatizado como crucial para a compreensão, e para isso, é disponibilizado um simulador didático gratuito no repositório [Simulador Simus](https://github.com/Simulador-Simus/SimuS), contendo código-fonte, executáveis para diversos sistemas operacionais e um manual detalhado. Além disso, todos os exemplos em linguagem de montagem utilizados no livro e respostas para os exercícios propostos no Capítulo de Linguagem de Montagem estão disponíveis no mesmo repositório.
 
-## Características do Simulador SimuS
+## 1.2 Características do Simulador SimuS
 
 <details markdown="1">
   
@@ -53,10 +53,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 
 </details>
 
-## Recursos Disponíveis
-
-### Histórico
-- [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
+## 1.3 Download e Manuais
   
 ### Simulador Executável
 - [Versão executável do simulador SimuS](https://github.com/Simulador-Simus/SimuS)
@@ -96,6 +93,9 @@ Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
   - [Exercícios do Capítulo 6](./docs/Exercicios06.pdf)
   - [Exercícios do Capítulo 7](./docs/Exercicios07.pdf)
   - [Exercícios do Capítulo 8](./docs/Exercicios08.pdf)
+
+# 4. Histórico
+- [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
       
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
