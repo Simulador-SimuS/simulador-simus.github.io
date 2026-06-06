@@ -64,9 +64,9 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 
 ### Simulador Web
 - [SimuS Web (Beta)](./simus-v0971.html)
-- [Manual de usuário do SimuS Web](docs/manual_simus.md)
-- [Versión en español del manual de usuario de SimuS Web](docs/manual_simus_es.md)
-- [English version of the SimuS Web User's Manual](docs/manual_simus_en.md)
+- [Manual de usuário do SimuS Web (PT)](docs/manual_simus.md)
+- [Manual de usuario de SimuS Web (ES)](docs/manual_simus_es.md)
+- [SimuS Web User's Manual (EN)](docs/manual_simus_en.md)
 - [Colabore respondendo ao questionário de avaliação do SimuS Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)
 
 ### Repositório
