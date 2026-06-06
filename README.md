@@ -75,25 +75,27 @@ Repositório com exemplos em linguagem de montagem do Sapiens:
 
 ### Slides de apoio
 Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
-    - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
-    - [Slides do Capítulo 2](./docs/Capítulo 2.pdf)
-    - [Slides do Capítulo 3](./docs/Capítulo 3.pdf)
-    - [Slides do Capítulo 4](./docs/Capítulo 4.pdf)
-    - [Slides do Capítulo 5](./docs/Capítulo 5.pdf)
-    - [Slides do Capítulo 6](./docs/Capítulo 6.pdf)
-    - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
-    - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
+
+  - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
+  - [Slides do Capítulo 2](./docs/Capítulo 2.pdf)
+  - [Slides do Capítulo 3](./docs/Capítulo 3.pdf)
+  - [Slides do Capítulo 4](./docs/Capítulo 4.pdf)
+  - [Slides do Capítulo 5](./docs/Capítulo 5.pdf)
+  - [Slides do Capítulo 6](./docs/Capítulo 6.pdf)
+  - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
+  - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
     
 ### Exercícios resolvidos
 Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
-    - [Exercícios do Capítulo 1](./docs/Exercicios01.pdf)
-    - [Exercícios do Capítulo 2](./docs/Exercicios02.pdf)
-    - [Exercícios do Capítulo 3](./docs/Exercicios03.pdf)
-    - [Exercícios do Capítulo 4](./docs/Exercicios04.pdf)
-    - [Exercícios do Capítulo 5](./docs/Exercicios05.pdf)
-    - [Exercícios do Capítulo 6](./docs/Exercicios06.pdf)
-    - [Exercícios do Capítulo 7](./docs/Exercicios07.pdf)
-    - [Exercícios do Capítulo 8](./docs/Exercicios08.pdf)
+
+  - [Exercícios do Capítulo 1](./docs/Exercicios01.pdf)
+  - [Exercícios do Capítulo 2](./docs/Exercicios02.pdf)
+  - [Exercícios do Capítulo 3](./docs/Exercicios03.pdf)
+  - [Exercícios do Capítulo 4](./docs/Exercicios04.pdf)
+  - [Exercícios do Capítulo 5](./docs/Exercicios05.pdf)
+  - [Exercícios do Capítulo 6](./docs/Exercicios06.pdf)
+  - [Exercícios do Capítulo 7](./docs/Exercicios07.pdf)
+  - [Exercícios do Capítulo 8](./docs/Exercicios08.pdf)
       
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
