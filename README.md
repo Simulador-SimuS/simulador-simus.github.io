@@ -1,7 +1,9 @@
 <meta name="description" content="Simulador Didático, Livro de Arquitetura de Computadores">
 <meta name="keywords" content="simulador, eletrônica, computação, assembly, linguagem de montagem, simulação, arquitetura de computadores, ensino, processador, organização de computadores, brasil, html, javascript, windows, linux, android, celular, ensino de computação, simulador de processador, 8085, simus, sapiens">
 
-# Apresentação
+# Simulador SimuS 
+
+## Apresentação
 <br>
 <br>
 <center>
@@ -22,7 +24,7 @@ O **SimuS** é um simulador desenvolvido para o processador didático **Sapiens*
 
 O uso de exemplos de programas em linguagem de montagem é enfatizado como crucial para a compreensão, e para isso, é disponibilizado um simulador didático gratuito no repositório [Simulador Simus](https://github.com/Simulador-Simus/SimuS), contendo código-fonte, executáveis para diversos sistemas operacionais e um manual detalhado. Além disso, todos os exemplos em linguagem de montagem utilizados no livro e respostas para os exercícios propostos no Capítulo de Linguagem de Montagem estão disponíveis no mesmo repositório.
 
-# Características do Simulador SimuS
+## Características do Simulador SimuS
 
 No simulador SimuS mantivemos a interface básica do seu predecessor, o simulador Neanderwin, mas com o acréscimo de algumas funcionalidades. Desde o início do projeto nosso objetivo era facilitar ao máximo as atividades didáticas do professor e o apoio mais completo possível para as dificuldades comuns do aluno. Para isso foi disponibilizado um ambiente integrado para desenvolvimento, com versões para os sistemas operacionais Windows e Linux, com os seguintes módulos: 
 - **Editor de textos** integrado, que possibilita a abertura, edição e  salvamento  de  arquivos em linguagem de montagem.
@@ -45,26 +47,27 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - **Raspberyy Pi**: o simulador pode ser compilado e executado no Raspberry Pi, controlando sensores e atuadores que estejam conectados à sua interface GPIO. 
 - **Python**: uma versão do simulador para uma extensão do processador Sapiens com um acumulador de 16 bits foi desenvolvida na linguagem python.
   
-# Recursos Disponíveis
+## Recursos Disponíveis
 
-## Histórico
+### Histórico
 - [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
   
-## Simulador Executável
+### Simulador Executável
 - [Versão executável do simulador SimuS](https://github.com/Simulador-Simus/SimuS)
-- [Manual do processador Sapiens](docs/SimuS.pdf)
+- [Descrição do SimuS e do processador Sapiens](docs/SimuS.pdf)
 
-## Simulador Web
+### Simulador Web
 - [SimuS Web (Beta)](./simus-v0971.html)
 - [Manual de usuário do SimuS Web](docs/manual_simus.md)
 - [Versión en español del manual de usuario de SimuS Web](docs/manual_simus_es.md)
 - [English version of the SimuS Web User's Manual](docs/manual_simus_en.md)
 - [Colabore respondendo ao questionário de avaliação do SimuS Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)
 
-## Repositório com exemplos em linguagem de montagem do Sapiens
+### Repositório
+Repositório com exemplos em linguagem de montagem do Sapiens:
 - [Código dos exemplos utilizados](https://github.com/Simulador-SimuS/SimuS/tree/master/Exemplos)
 
-## Slides de apoio
+### Slides de apoio
 Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
     - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
     - [Slides do Capítulo 2](./docs/Capítulo 2.pdf)
@@ -75,8 +78,8 @@ Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Compu
     - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
     - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
     
-## Exercícios resolvidos
-- Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
+### Exercícios resolvidos
+Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
     - [Exercícios do Capítulo 1](./docs/Exercicios01.pdf)
     - [Exercícios do Capítulo 2](./docs/Exercicios02.pdf)
     - [Exercícios do Capítulo 3](./docs/Exercicios03.pdf)
