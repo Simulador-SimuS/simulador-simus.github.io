@@ -1,7 +1,7 @@
 <meta name="description" content="Simulador Didático, Livro de Arquitetura de Computadores">
 <meta name="keywords" content="simulador, eletrônica, computação, assembly, linguagem de montagem, simulação, arquitetura de computadores, ensino, processador, organização de computadores, brasil, html, javascript, windows, linux, android, celular, ensino de computação, simulador de processador, 8085, simus, sapiens">
 
-# Simulador SimuS 
+# 1. Simulador SimuS 
 
 ## Apresentação
 <br>
@@ -73,7 +73,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 Repositório com exemplos em linguagem de montagem do Sapiens:
 - [Código dos exemplos utilizados](https://github.com/Simulador-SimuS/SimuS/tree/master/Exemplos)
 
-### Slides de apoio
+# 2. Slides de apoio
 Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
 
   - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
@@ -85,7 +85,7 @@ Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Compu
   - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
   - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
     
-### Exercícios resolvidos
+# 3. Exercícios resolvidos
 Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
 
   - [Exercícios do Capítulo 1](./docs/Exercicios01.pdf)
