@@ -26,6 +26,10 @@ O uso de exemplos de programas em linguagem de montagem é enfatizado como cruci
 
 ## Características do Simulador SimuS
 
+<details markdown="1">
+  
+  <summary>Clique aqui para ver mais detalhes</summary>
+
 No simulador SimuS mantivemos a interface básica do seu predecessor, o simulador Neanderwin, mas com o acréscimo de algumas funcionalidades. Desde o início do projeto nosso objetivo era facilitar ao máximo as atividades didáticas do professor e o apoio mais completo possível para as dificuldades comuns do aluno. Para isso foi disponibilizado um ambiente integrado para desenvolvimento, com versões para os sistemas operacionais Windows e Linux, com os seguintes módulos: 
 - **Editor de textos** integrado, que possibilita a abertura, edição e  salvamento  de  arquivos em linguagem de montagem.
 - **Montador (assembler)** também integrado, gerando o código  objeto final em  linguagem  de   montagem. Possui compatibilidade com programas escritos para os processadores Neander ou Neander-X.
@@ -46,7 +50,9 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - **Arduino**: a possibilidade de controlar atuadores e sensores conectados aos pinos de um Arduino, que por sua vez está ligado ao hospedeiro via interface USB, com uso do protocolo Firmata. 
 - **Raspberyy Pi**: o simulador pode ser compilado e executado no Raspberry Pi, controlando sensores e atuadores que estejam conectados à sua interface GPIO. 
 - **Python**: uma versão do simulador para uma extensão do processador Sapiens com um acumulador de 16 bits foi desenvolvida na linguagem python.
-  
+
+</details>
+
 ## Recursos Disponíveis
 
 ### Histórico
