@@ -99,6 +99,9 @@ Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
 
 # 4. Histórico
 - [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
+
+# 5. Ferramentas
+- [Conversor binário, hexadecimal e de inteiros com sinal](conversor_binhex_v090.html)
       
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
