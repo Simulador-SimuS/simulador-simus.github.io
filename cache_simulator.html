@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cache</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-tertiary {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(237, 137, 54, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .visualization {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-panel {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .history-panel h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .history-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border-left: 4px solid #ddd;
+        }
+
+        .history-item.hit {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .history-item.miss {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .step-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .step-info h3 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .address-breakdown {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .address-breakdown h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .address-field {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .tag-field {
+            background: #e1bee7;
+            color: #4a148c;
+        }
+
+        .index-field {
+            background: #b2ebf2;
+            color: #006064;
+        }
+
+        .offset-field {
+            background: #ffccbc;
+            color: #bf360c;
+        }
+
+        .cache-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cache-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .cache-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: monospace;
+        }
+
+        .cache-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .cache-table tr.highlight-hit {
+            background: #c8e6c9 !important;
+            animation: pulse 0.5s;
+        }
+
+        .cache-table tr.highlight-miss {
+            background: #ffcdd2 !important;
+            animation: shake 0.5s;
+        }
+
+        .valid-bit {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .valid-bit.valid {
+            background: #4caf50;
+            color: white;
+        }
+
+        .valid-bit.invalid {
+            background: #ccc;
+            color: #666;
+        }
+
+        .dirty-bit {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .dirty-bit.dirty {
+            background: #ff9800;
+            color: white;
+        }
+
+        .dirty-bit.clean {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .info-box h4 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .config-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .config-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .config-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .config-value {
+            color: #333;
+            font-family: monospace;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .history-panel {
+                width: 100%;
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💾 Simulador de Cache</h1>
+        <p class="subtitle">Visualize o funcionamento de diferentes tipos de mapeamento e políticas de substituição</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="cacheSize">Linhas da Cache:</label>
+                <input type="number" id="cacheSize" value="8" min="2" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="blockSize">Tamanho do Bloco (palavras):</label>
+                <input type="number" id="blockSize" value="4" min="1" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="addressBits">Bits de Endereço:</label>
+                <input type="number" id="addressBits" value="8" min="6" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="mappingType">Tipo de Mapeamento:</label>
+                <select id="mappingType">
+                    <option value="direct">Mapeamento Direto</option>
+                    <option value="associative">Completamente Associativo</option>
+                    <option value="set-2">Associativo por Conjunto (2 vias)</option>
+                    <option value="set-4">Associativo por Conjunto (4 vias)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="replacementPolicy">Política de Substituição:</label>
+                <select id="replacementPolicy">
+                    <option value="fifo">FIFO (First In, First Out)</option>
+                    <option value="lru">LRU (Least Recently Used)</option>
+                    <option value="random">Aleatória</option>
+                </select>
+            </div>
+
+            <div class="control-group" style="grid-column: span 2;">
+                <label for="addressSequence">Sequência de Endereços (decimal ou hex 0x...):</label>
+                <textarea id="addressSequence" rows="3" placeholder="Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...">0, 4, 8, 12, 16, 20, 24, 0, 4, 8, 28, 32, 0, 16</textarea>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-primary" onclick="startSimulation()">▶ Iniciar Simulação</button>
+            <button class="btn-secondary" onclick="previousStep()">⏮ Anterior</button>
+            <button class="btn-secondary" onclick="nextStep()">Próximo ⏭</button>
+            <button class="btn-tertiary" onclick="autoPlay()">⏯ Auto</button>
+            <button class="btn-tertiary" onclick="resetSimulation()">🔄 Resetar</button>
+        </div>
+
+        <div id="configInfo"></div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Acessos Totais</div>
+                <div class="stat-value" id="totalAccess">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cache Hits</div>
+                <div class="stat-value" id="cacheHits">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cache Misses</div>
+                <div class="stat-value" id="cacheMisses">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Taxa de Acerto</div>
+                <div class="stat-value" id="hitRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Write-backs</div>
+                <div class="stat-value" id="writebacks">0</div>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent" style="display: none;">
+            <div class="visualization">
+                <div class="step-info" id="stepInfo"></div>
+                <div class="address-breakdown" id="addressBreakdown"></div>
+                <div id="cacheVisualization"></div>
+            </div>
+
+            <div class="history-panel">
+                <h3>📜 Histórico de Acessos</h3>
+                <div id="stepCounter" style="margin-bottom: 10px; font-weight: bold; color: #667eea;"></div>
+                <div id="history"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let simulation = {
+            cache: [],
+            history: [],
+            currentStep: -1,
+            hits: 0,
+            misses: 0,
+            writebacks: 0,
+            config: {},
+            autoPlayInterval: null
+        };
+
+        function parseAddress(addr) {
+            if (typeof addr === 'string') {
+                addr = addr.trim();
+                if (addr.startsWith('0x') || addr.startsWith('0X')) {
+                    return parseInt(addr, 16);
+                }
+            }
+            return parseInt(addr);
+        }
+
+        function calculateCacheConfig() {
+            const cacheSize = parseInt(document.getElementById('cacheSize').value);
+            const blockSize = parseInt(document.getElementById('blockSize').value);
+            const addressBits = parseInt(document.getElementById('addressBits').value);
+            const mappingType = document.getElementById('mappingType').value;
+
+            let config = {
+                cacheSize: cacheSize,
+                blockSize: blockSize,
+                addressBits: addressBits,
+                mappingType: mappingType,
+                offsetBits: Math.log2(blockSize),
+                sets: 0,
+                associativity: 0,
+                indexBits: 0,
+                tagBits: 0
+            };
+
+            switch(mappingType) {
+                case 'direct':
+                    config.sets = cacheSize;
+                    config.associativity = 1;
+                    config.indexBits = Math.log2(cacheSize);
+                    break;
+                case 'associative':
+                    config.sets = 1;
+                    config.associativity = cacheSize;
+                    config.indexBits = 0;
+                    break;
+                case 'set-2':
+                    config.sets = cacheSize / 2;
+                    config.associativity = 2;
+                    config.indexBits = Math.log2(config.sets);
+                    break;
+                case 'set-4':
+                    config.sets = cacheSize / 4;
+                    config.associativity = 4;
+                    config.indexBits = Math.log2(config.sets);
+                    break;
+            }
+
+            config.tagBits = addressBits - config.indexBits - config.offsetBits;
+
+            return config;
+        }
+
+        function displayConfigInfo() {
+            const config = calculateCacheConfig();
+            
+            let html = `
+                <div class="info-box">
+                    <h4>⚙️ Configuração da Cache</h4>
+                    <div class="config-summary">
+                        <div class="config-item">
+                            <span class="config-label">Linhas totais:</span>
+                            <span class="config-value">${config.cacheSize}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Conjuntos:</span>
+                            <span class="config-value">${config.sets}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Associatividade:</span>
+                            <span class="config-value">${config.associativity} via(s)</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Tamanho do bloco:</span>
+                            <span class="config-value">${config.blockSize} palavras</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Bits de Tag:</span>
+                            <span class="config-value">${config.tagBits} bits</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Bits de Índice:</span>
+                            <span class="config-value">${config.indexBits} bits</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Bits de Offset:</span>
+                            <span class="config-value">${config.offsetBits} bits</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('configInfo').innerHTML = html;
+        }
+
+        function extractAddressFields(address, config) {
+            const offsetMask = (1 << config.offsetBits) - 1;
+            const indexMask = (1 << config.indexBits) - 1;
+            
+            const offset = address & offsetMask;
+            const index = (address >> config.offsetBits) & indexMask;
+            const tag = address >> (config.offsetBits + config.indexBits);
+
+            return { tag, index, offset };
+        }
+
+        function initializeCache(config) {
+            let cache = [];
+            
+            for (let i = 0; i < config.sets; i++) {
+                let set = [];
+                for (let j = 0; j < config.associativity; j++) {
+                    set.push({
+                        valid: false,
+                        dirty: false,
+                        tag: null,
+                        data: null,
+                        lastUsed: 0,
+                        loadTime: 0,
+                        fifoIndex: j
+                    });
+                }
+                cache.push(set);
+            }
+            
+            return cache;
+        }
+
+        function startSimulation() {
+            const addressSeqText = document.getElementById('addressSequence').value;
+            const replacementPolicy = document.getElementById('replacementPolicy').value;
+            
+            const addresses = addressSeqText.split(',')
+                .map(addr => parseAddress(addr))
+                .filter(addr => !isNaN(addr));
+
+            if (addresses.length === 0) {
+                alert('Por favor, insira uma sequência válida de endereços!');
+                return;
+            }
+
+            const config = calculateCacheConfig();
+            simulation.config = config;
+            simulation.cache = initializeCache(config);
+            simulation.history = [];
+            simulation.currentStep = -1;
+            simulation.hits = 0;
+            simulation.misses = 0;
+            simulation.writebacks = 0;
+
+            // Simulate all steps
+            let tempCache = JSON.parse(JSON.stringify(simulation.cache));
+            let time = 0;
+
+            addresses.forEach((address, stepNum) => {
+                const fields = extractAddressFields(address, config);
+                const set = tempCache[fields.index];
+                
+                let step = {
+                    stepNumber: stepNum + 1,
+                    address: address,
+                    fields: fields,
+                    isHit: false,
+                    replacedLine: null,
+                    writeBack: false,
+                    cacheBefore: JSON.parse(JSON.stringify(tempCache)),
+                    cacheAfter: null
+                };
+
+                // Check for hit
+                let hitLine = -1;
+                for (let i = 0; i < set.length; i++) {
+                    if (set[i].valid && set[i].tag === fields.tag) {
+                        hitLine = i;
+                        break;
+                    }
+                }
+
+                if (hitLine !== -1) {
+                    // HIT
+                    step.isHit = true;
+                    set[hitLine].lastUsed = time;
+                    // Simular escrita (50% de chance)
+                    if (Math.random() > 0.5) {
+                        set[hitLine].dirty = true;
+                    }
+                } else {
+                    // MISS
+                    simulation.misses++;
+                    
+                    // Find victim line
+                    let victimLine = -1;
+                    
+                    // First check for invalid line
+                    for (let i = 0; i < set.length; i++) {
+                        if (!set[i].valid) {
+                            victimLine = i;
+                            break;
+                        }
+                    }
+
+                    // If all valid, use replacement policy
+                    if (victimLine === -1) {
+                        switch(replacementPolicy) {
+                            case 'fifo':
+                                victimLine = findFIFOVictim(set);
+                                break;
+                            case 'lru':
+                                victimLine = findLRUVictim(set);
+                                break;
+                            case 'random':
+                                victimLine = Math.floor(Math.random() * set.length);
+                                break;
+                        }
+                    }
+
+                    // Check if need write-back
+                    if (set[victimLine].valid && set[victimLine].dirty) {
+                        step.writeBack = true;
+                        simulation.writebacks++;
+                    }
+
+                    step.replacedLine = victimLine;
+
+                    // Load new block
+                    set[victimLine] = {
+                        valid: true,
+                        dirty: Math.random() > 0.7, // 30% dirty on load (simulate write)
+                        tag: fields.tag,
+                        data: `0x${address.toString(16).toUpperCase().padStart(2, '0')}`,
+                        lastUsed: time,
+                        loadTime: time,
+                        fifoIndex: set[victimLine].fifoIndex
+                    };
+                }
+
+                step.cacheAfter = JSON.parse(JSON.stringify(tempCache));
+                simulation.history.push(step);
+                time++;
+            });
+
+            simulation.hits = simulation.history.filter(s => s.isHit).length;
+
+            document.getElementById('stats').style.display = 'grid';
+            document.getElementById('mainContent').style.display = 'flex';
+            
+            showStep(0);
+        }
+
+        function findFIFOVictim(set) {
+            let oldest = 0;
+            for (let i = 1; i < set.length; i++) {
+                if (set[i].loadTime < set[oldest].loadTime) {
+                    oldest = i;
+                }
+            }
+            return oldest;
+        }
+
+        function findLRUVictim(set) {
+            let lru = 0;
+            for (let i = 1; i < set.length; i++) {
+                if (set[i].lastUsed < set[lru].lastUsed) {
+                    lru = i;
+                }
+            }
+            return lru;
+        }
+
+        function showStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= simulation.history.length) return;
+            
+            simulation.currentStep = stepIndex;
+            const step = simulation.history[stepIndex];
+            const config = simulation.config;
+
+            // Update counter
+            document.getElementById('stepCounter').textContent = 
+                `Passo: ${stepIndex + 1} / ${simulation.history.length}`;
+
+            // Update step info
+            let info = `<h3>Passo ${step.stepNumber}: Acesso ao endereço ${step.address} (0x${step.address.toString(16).toUpperCase()})</h3>`;
+            
+            if (step.isHit) {
+                info += `<p style="color: #4caf50; font-weight: bold; font-size: 1.1em;">✓ CACHE HIT</p>`;
+                info += `<p>Dados encontrados na cache!</p>`;
+            } else {
+                info += `<p style="color: #f44336; font-weight: bold; font-size: 1.1em;">✗ CACHE MISS</p>`;
+                info += `<p>Bloco carregado da memória principal na linha ${step.replacedLine}</p>`;
+                if (step.writeBack) {
+                    info += `<p style="color: #ff9800;">⚠️ Write-back necessário (bloco sujo)</p>`;
+                }
+            }
+
+            document.getElementById('stepInfo').innerHTML = info;
+
+            // Address breakdown
+            const fields = step.fields;
+            let breakdownHtml = `
+                <h4>🔍 Decomposição do Endereço</h4>
+                <div style="margin-top: 10px;">
+                    <strong>Endereço:</strong> ${step.address} (0x${step.address.toString(16).toUpperCase().padStart(Math.ceil(config.addressBits/4), '0')}) = 
+                    ${step.address.toString(2).padStart(config.addressBits, '0')}₂
+                </div>
+                <div style="margin-top: 10px;">
+            `;
+
+            if (config.tagBits > 0) {
+                breakdownHtml += `
+                    <div class="address-field tag-field">
+                        Tag: ${fields.tag} (${fields.tag.toString(2).padStart(config.tagBits, '0')}₂)
+                    </div>
+                `;
+            }
+
+            if (config.indexBits > 0) {
+                breakdownHtml += `
+                    <div class="address-field index-field">
+                        Índice: ${fields.index} (${fields.index.toString(2).padStart(config.indexBits, '0')}₂)
+                    </div>
+                `;
+            }
+
+            breakdownHtml += `
+                <div class="address-field offset-field">
+                    Offset: ${fields.offset} (${fields.offset.toString(2).padStart(config.offsetBits, '0')}₂)
+                </div>
+            </div>
+            `;
+
+            document.getElementById('addressBreakdown').innerHTML = breakdownHtml;
+
+            // Cache visualization
+            renderCache(step.cacheAfter, step);
+
+            // Update statistics
+            const currentHits = simulation.history.slice(0, stepIndex + 1).filter(s => s.isHit).length;
+            const currentMisses = simulation.history.slice(0, stepIndex + 1).filter(s => !s.isHit).length;
+            const currentWritebacks = simulation.history.slice(0, stepIndex + 1).filter(s => s.writeBack).length;
+            const total = stepIndex + 1;
+            const hitRate = total > 0 ? ((currentHits / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('totalAccess').textContent = total;
+            document.getElementById('cacheHits').textContent = currentHits;
+            document.getElementById('cacheMisses').textContent = currentMisses;
+            document.getElementById('hitRate').textContent = hitRate + '%';
+            document.getElementById('writebacks').textContent = currentWritebacks;
+
+            // Update history
+            updateHistory();
+        }
+
+        function renderCache(cache, step) {
+            const config = simulation.config;
+            let html = '<table class="cache-table">';
+            
+            // Header
+            html += '<thead><tr>';
+            html += '<th>Conjunto</th>';
+            html += '<th>Linha</th>';
+            html += '<th>Válido</th>';
+            html += '<th>Sujo</th>';
+            html += '<th>Tag</th>';
+            html += '<th>Dados</th>';
+            
+            const policy = document.getElementById('replacementPolicy').value;
+            if (policy === 'lru') {
+                html += '<th>Último Uso</th>';
+            } else if (policy === 'fifo') {
+                html += '<th>Tempo Carga</th>';
+            }
+            
+            html += '</tr></thead><tbody>';
+
+            // Cache lines
+            cache.forEach((set, setIndex) => {
+                set.forEach((line, lineIndex) => {
+                    const rowClass = (step.fields.index === setIndex && 
+                                    lineIndex === step.replacedLine && !step.isHit) ? 'highlight-miss' :
+                                   (step.fields.index === setIndex && 
+                                    line.valid && line.tag === step.fields.tag && step.isHit) ? 'highlight-hit' : '';
+                    
+                    html += `<tr class="${rowClass}">`;
+                    
+                    if (lineIndex === 0) {
+                        html += `<td rowspan="${set.length}" style="background: #f0f0f0; font-weight: bold;">${setIndex}</td>`;
+                    }
+                    
+                    html += `<td>${lineIndex}</td>`;
+                    html += `<td><span class="valid-bit ${line.valid ? 'valid' : 'invalid'}">${line.valid ? '1' : '0'}</span></td>`;
+                    html += `<td><span class="dirty-bit ${line.dirty ? 'dirty' : 'clean'}">${line.dirty ? 'D' : '-'}</span></td>`;
+                    html += `<td>${line.valid ? line.tag : '-'}</td>`;
+                    html += `<td>${line.valid ? line.data : '-'}</td>`;
+                    
+                    if (policy === 'lru') {
+                        html += `<td>${line.valid ? line.lastUsed : '-'}</td>`;
+                    } else if (policy === 'fifo') {
+                        html += `<td>${line.valid ? line.loadTime : '-'}</td>`;
+                    }
+                    
+                    html += '</tr>';
+                });
+            });
+
+            html += '</tbody></table>';
+            
+            document.getElementById('cacheVisualization').innerHTML = html;
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = '';
+            
+            simulation.history.forEach((step, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'history-item ' + (step.isHit ? 'hit' : 'miss');
+                
+                let content = `<strong>Passo ${step.stepNumber}:</strong> 0x${step.address.toString(16).toUpperCase()} - `;
+                content += step.isHit ? 
+                    '<span style="color: #28a745;">HIT</span>' : 
+                    '<span style="color: #dc3545;">MISS</span>';
+                
+                if (!step.isHit && step.writeBack) {
+                    content += ' <span style="color: #ff9800;">⚠️WB</span>';
+                }
+                
+                itemDiv.innerHTML = content;
+                
+                if (index === simulation.currentStep) {
+                    itemDiv.style.background = '#fff3cd';
+                    itemDiv.style.fontWeight = 'bold';
+                }
+                
+                historyDiv.appendChild(itemDiv);
+            });
+            
+            const currentItem = historyDiv.children[simulation.currentStep];
+            if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function nextStep() {
+            if (simulation.currentStep < simulation.history.length - 1) {
+                showStep(simulation.currentStep + 1);
+            }
+        }
+
+        function previousStep() {
+            if (simulation.currentStep > 0) {
+                showStep(simulation.currentStep - 1);
+            }
+        }
+
+        function autoPlay() {
+            if (simulation.autoPlayInterval) {
+                clearInterval(simulation.autoPlayInterval);
+                simulation.autoPlayInterval = null;
+            } else {
+                simulation.autoPlayInterval = setInterval(() => {
+                    if (simulation.currentStep < simulation.history.length - 1) {
+                        nextStep();
+                    } else {
+                        clearInterval(simulation.autoPlayInterval);
+                        simulation.autoPlayInterval = null;
+                    }
+                }, 1500);
+            }
+        }
+
+        function resetSimulation() {
+            if (simulation.autoPlayInterval) {
+                clearInterval(simulation.autoPlayInterval);
+                simulation.autoPlayInterval = null;
+            }
+            
+            simulation = {
+                cache: [],
+                history: [],
+                currentStep: -1,
+                hits: 0,
+                misses: 0,
+                writebacks: 0,
+                config: {},
+                autoPlayInterval: null
+            };
+
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            displayConfigInfo();
+        }
+
+        // Event listeners
+        document.getElementById('cacheSize').addEventListener('change', displayConfigInfo);
+        document.getElementById('blockSize').addEventListener('change', displayConfigInfo);
+        document.getElementById('addressBits').addEventListener('change', displayConfigInfo);
+        document.getElementById('mappingType').addEventListener('change', displayConfigInfo);
+
+        // Initial config display
+        displayConfigInfo();
+    </script>
+</body>
+</html>
