@@ -101,7 +101,7 @@ Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
 - [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
 
 # 5. Ferramentas
-- [Conversor binário, hexadecimal e de inteiros com sinal](conversor_binhex_v090.html)
+- [Conversor binário, hexadecimal e de inteiros com sinal](./conversor_binhex_v090.html)
 - [Simulador de Cache](./cache_simulator.html)
       
 <!-- Google tag (gtag.js) -->
