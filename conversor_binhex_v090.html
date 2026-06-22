@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor binário, hexadecimal e inteiros com sinal</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --panel: #e4f6ce;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #d9deea;
+      --soft: #eef2f8;
+      --accent: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --input-bg: #fbe4c9;
+      --input-border: #f97316;
+      --input-strong: #c2410c;
+      --ok: #166534;
+      --warn: #92400e;
+      --danger: #991b1b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+
+    header {
+      padding: 28px 24px 18px;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.15rem;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    p { margin: 0 0 10px; }
+
+    code {
+      font-family: var(--mono);
+      background: #eef2f8;
+      padding: 1px 5px;
+      border-radius: 5px;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.9fr) minmax(380px, 1.45fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(20, 35, 60, 0.05);
+    }
+
+    .input-card {
+      background: linear-gradient(180deg, var(--input-bg), #e4f7c4 70%);
+      border: 2px solid var(--input-border);
+      box-shadow: 0 10px 24px rgba(249, 115, 22, 0.12);
+    }
+
+    .input-card h2 {
+      color: var(--input-strong);
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-weight: 650;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    input[type="text"] {
+      font-family: var(--mono);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 2px solid var(--input-border);
+      background: #fffbeb;
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--input-strong);
+      box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.18);
+    }
+
+    .inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .inline { grid-template-columns: 1fr; }
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 6px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--ink);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 650;
+    }
+
+    button:hover,
+    button:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .result-main {
+      display: grid;
+      gap: 12px;
+      background-color: #e6dabe;
+    }
+
+    .pattern {
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .pattern .label {
+      color: #a7b0c0;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+
+    .big-mono {
+      font-family: var(--mono);
+      font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+      word-break: break-word;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px;
+      background: #fff;
+      min-height: 86px;
+    }
+
+    .mini .name {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+    }
+
+    .mini .value {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 750;
+      word-break: break-word;
+    }
+
+    .note {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 10px;
+      padding: 12px 13px;
+      color: #102a56;
+    }
+
+    .warning {
+      display: none;
+      border-left: 4px solid var(--warn);
+      background: #fef3c7;
+      border-radius: 10px;
+      padding: 12px 13px;
+      color: #5c3708;
+    }
+
+    .warning.active { display: block; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.96rem;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 6px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 750;
+      background: #fafbfe;
+    }
+
+    td.mono, th.mono { font-family: var(--mono); }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .two-cols { grid-template-columns: 1fr; }
+    }
+
+    .steps {
+      display: grid;
+      gap: 8px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .step:last-child { border-bottom: 0; }
+
+    .step .k {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .step .v {
+      font-family: var(--mono);
+      word-break: break-word;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .print-button {
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      padding: 9px 12px;
+    }
+
+    .print-button:hover { color: var(--ink); }
+
+    @media print {
+      body { background: #fff; }
+      header, main { padding: 12px; }
+      button, .print-row { display: none !important; }
+      .card {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+      .input-card {
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Conversor binário, hexadecimal e inteiros com sinal</h1>
+  </header>
+
+  <main>
+    <section class="grid">
+      <div class="card input-card">
+        <h2>Entrada de dados</h2>
+        <div class="controls">
+          <div>
+            <label for="valueInput">Padrão binário ou hexadecimal</label>
+            <input id="valueInput" type="text" value="F6" autocomplete="off" />
+            <div class="hint">
+              Você pode usar espaços ou separadores: <code>1111 0110</code>, <code>0xF6</code>, <code>F6</code>.
+            </div>
+          </div>
+
+          <div class="inline">
+            <div>
+              <label for="inputBase">Base da entrada</label>
+              <select id="inputBase">
+                <option value="hex" selected>Hexadecimal</option>
+                <option value="bin">Binária</option>
+              </select>
+            </div>
+            <div>
+              <label for="wordSize">Tamanho da palavra</label>
+              <select id="wordSize">
+                <option value="4">4 bits</option>
+                <option value="8" selected>8 bits</option>
+                <option value="16">16 bits</option>
+                <option value="32">32 bits</option>
+                <option value="64">64 bits</option>
+              </select>
+            </div>
+          </div>
+          <div class="print-row">
+            <span class="hint">Arquivo autocontido: funciona offline no navegador.</span>
+            <button class="print-button" onclick="window.print()">Imprimir / salvar em PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card result-main">
+        <h2>Resultado</h2>
+        <div id="warning" class="warning"></div>
+
+        <div class="pattern">
+          <div class="label">Binário agrupado em quartetos</div>
+          <div id="binaryOut" class="big-mono"></div>
+        </div>
+
+        <div class="pattern">
+          <div class="label">Hexadecimal equivalente</div>
+          <div id="hexOut" class="big-mono"></div>
+        </div>
+
+        <div class="summary">
+          <div class="mini">
+            <div class="name">Sem sinal</div>
+            <div id="unsignedOut" class="value"></div>
+          </div>
+          <div class="mini">
+            <div class="name">BCD compactado</div>
+            <div id="bcdOut" class="value"></div>
+          </div>
+          <div class="mini">
+            <div class="name">Sinal-magnitude</div>
+            <div id="signMagnitudeOut" class="value"></div>
+          </div>
+          <div class="mini">
+            <div class="name">Complemento a um</div>
+            <div id="onesOut" class="value"></div>
+          </div>
+          <div class="mini">
+            <div class="name">Complemento de dois</div>
+            <div id="twosOut" class="value"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-cols">
+      <div class="card">
+        <h2>Conversão binário ↔ hexadecimal</h2>
+        <p>Cada dígito hexadecimal corresponde a exatamente 4 bits, pois 16 = 2⁴.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Grupo binário</th>
+              <th>Dígito hexadecimal</th>
+            </tr>
+          </thead>
+          <tbody id="nibbleTable"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Interpretação do padrão</h2>
+        <div class="steps" id="steps"></div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>Intervalos representáveis</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Representação</th>
+            <th>Intervalo para o tamanho escolhido</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody id="rangeTable"></tbody>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>Observações</h2>
+      <p>
+        Em BCD compactado, cada grupo de 4 bits representa um dígito decimal de 0 a 9.
+        Portanto, combinações como A, B, C, D, E e F não são dígitos BCD válidos.
+      </p>
+      <p>
+        Em complemento a um, números negativos são obtidos pela inversão bit a bit do valor positivo.
+        Essa representação possui dois zeros: +0 e −0.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const DIGITS = "0123456789ABCDEF";
+    const $ = (id) => document.getElementById(id);
+
+    function cleanInput(raw, base) {
+      let s = String(raw || "").trim().toUpperCase();
+      s = s.replace(/^0X/, "").replace(/^0B/, "");
+      s = s.replace(/[\s_:\-.]/g, "");
+      const re = base === "bin" ? /^[01]+$/ : /^[0-9A-F]+$/;
+      if (!s || !re.test(s)) {
+        throw new Error(base === "bin"
+          ? "Digite apenas 0 e 1 para uma entrada binária."
+          : "Digite apenas dígitos hexadecimais de 0 a 9 e A a F.");
+      }
+      return s;
+    }
+
+    function hexToBits(hex) {
+      return [...hex].map(ch => DIGITS.indexOf(ch).toString(2).padStart(4, "0")).join("");
+    }
+
+    function bitsToHex(bits) {
+      const padded = bits.padStart(Math.ceil(bits.length / 4) * 4, "0");
+      let out = "";
+      for (let i = 0; i < padded.length; i += 4) {
+        out += DIGITS[parseInt(padded.slice(i, i + 4), 2)];
+      }
+      return out;
+    }
+
+    function groupBits(bits) {
+      return bits.match(/.{1,4}/g).join(" ");
+    }
+
+    function parseBits(bits) {
+      return BigInt("0b" + bits);
+    }
+
+    function pow2(n) {
+      return 1n << BigInt(n);
+    }
+
+    function pow10(n) {
+      let result = 1n;
+      for (let i = 0; i < n; i++) result *= 10n;
+      return result;
+    }
+
+    function formatBigInt(x) {
+      return x.toString(10);
+    }
+
+    function normalizeToWord(bits, n) {
+      let warning = "";
+      if (bits.length > n) {
+        const original = bits;
+        bits = bits.slice(bits.length - n);
+        warning = `A entrada possui ${original.length} bits, mas a palavra escolhida tem ${n} bits. Foram considerados os ${n} bits menos significativos: ${groupBits(bits)}.`;
+      } else if (bits.length < n) {
+        bits = bits.padStart(n, "0");
+      }
+      return { bits, warning };
+    }
+
+    function invertBits(bits) {
+      return [...bits].map(b => b === "0" ? "1" : "0").join("");
+    }
+
+    function addOneToBits(bits) {
+      const n = bits.length;
+      const value = parseBits(bits) + 1n;
+      const mask = pow2(n) - 1n;
+      return (value & mask).toString(2).padStart(n, "0");
+    }
+
+    function signMagnitudeValue(bits) {
+      const sign = bits[0];
+      const magnitudeBits = bits.slice(1) || "0";
+      const mag = parseBits(magnitudeBits);
+      if (sign === "0") return formatBigInt(mag);
+      if (mag === 0n) return "−0";
+      return "−" + formatBigInt(mag);
+    }
+
+    function onesComplementValue(bits) {
+      if (bits[0] === "0") return { valueText: formatBigInt(parseBits(bits)), isNegativeZero: false };
+      const mag = parseBits(invertBits(bits));
+      if (mag === 0n) return { valueText: "−0", isNegativeZero: true };
+      return { valueText: "−" + formatBigInt(mag), isNegativeZero: false };
+    }
+
+    function twosComplementValue(bits) {
+      const n = bits.length;
+      const unsigned = parseBits(bits);
+      if (bits[0] === "0") return unsigned;
+      return unsigned - pow2(n);
+    }
+
+    function bcdValue(bits) {
+      const nibbles = bits.match(/.{1,4}/g) || [];
+      const invalid = [];
+      const digits = [];
+
+      for (const nibble of nibbles) {
+        const value = parseInt(nibble, 2);
+        if (value > 9) invalid.push(DIGITS[value]);
+        digits.push(DIGITS[value]);
+      }
+
+      if (invalid.length > 0) {
+        return {
+          valid: false,
+          text: `inválido (${[...new Set(invalid)].join(", ")})`,
+          digits: digits.join("")
+        };
+      }
+
+      const digitString = digits.join("");
+      const decimalValue = BigInt(digitString || "0");
+      return {
+        valid: true,
+        text: `${digitString} (valor ${decimalValue.toString(10)})`,
+        digits: digitString
+      };
+    }
+
+    function renderNibbleTable(bits) {
+      const tbody = $("nibbleTable");
+      tbody.innerHTML = "";
+      for (let i = 0; i < bits.length; i += 4) {
+        const nibble = bits.slice(i, i + 4);
+        const hex = DIGITS[parseInt(nibble, 2)];
+        const bcdStatus = parseInt(nibble, 2) <= 9 ? "válido em BCD" : "inválido em BCD";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td class="mono">${nibble}</td><td class="mono">${hex}</td><td>${bcdStatus}</td>`;
+        tbody.appendChild(tr);
+      }
+
+      const head = tbody.parentElement.querySelector("thead tr");
+      if (head.children.length === 2) {
+        const th = document.createElement("th");
+        th.textContent = "BCD";
+        head.appendChild(th);
+      }
+    }
+
+    function renderRanges(n) {
+      const unsignedMax = pow2(n) - 1n;
+      const signedMax = pow2(n - 1) - 1n;
+      const tcMin = -pow2(n - 1);
+      const tcMax = pow2(n - 1) - 1n;
+      const decimalDigits = n / 4;
+      const bcdMax = pow10(decimalDigits) - 1n;
+      const bcdMaxText = bcdMax.toString(10).padStart(decimalDigits, "9");
+
+      $("rangeTable").innerHTML = `
+        <tr>
+          <td>Sem sinal</td>
+          <td class="mono">0 a ${formatBigInt(unsignedMax)}</td>
+          <td>Todos os ${n} bits representam magnitude.</td>
+        </tr>
+        <tr>
+          <td>BCD compactado sem sinal</td>
+          <td class="mono">0 a ${bcdMaxText}</td>
+          <td>Representa ${decimalDigits} dígito(s) decimal(is); cada quarteto deve estar entre 0000 e 1001.</td>
+        </tr>
+        <tr>
+          <td>Sinal-magnitude</td>
+          <td class="mono">−${formatBigInt(signedMax)} a +${formatBigInt(signedMax)}</td>
+          <td>Há duas representações para zero: +0 e −0.</td>
+        </tr>
+        <tr>
+          <td>Complemento a um</td>
+          <td class="mono">−${formatBigInt(signedMax)} a +${formatBigInt(signedMax)}</td>
+          <td>Negativos são obtidos pela inversão dos bits; também há +0 e −0.</td>
+        </tr>
+        <tr>
+          <td>Complemento de dois</td>
+          <td class="mono">${formatBigInt(tcMin)} a ${formatBigInt(tcMax)}</td>
+          <td>Não há zero negativo; há um valor negativo a mais.</td>
+        </tr>
+      `;
+    }
+
+    function renderSteps(bits, unsigned, bcd, sm, oc, tc) {
+      const signBit = bits[0];
+      const magnitudeBits = bits.slice(1) || "0";
+      const inverted = invertBits(bits);
+      const plusOne = addOneToBits(inverted);
+
+      const ocText = signBit === "0"
+        ? `MSB = 0. Em complemento a um, o valor não negativo coincide com o valor sem sinal: ${formatBigInt(unsigned)}.`
+        : `MSB = 1. Invertendo os bits, obtém-se ${groupBits(inverted)}₂, cuja magnitude é ${formatBigInt(parseBits(inverted))}. Valor: ${oc.valueText}.`;
+
+      const tcText = tc < 0n
+        ? `MSB = 1. Para achar a magnitude: inverte (${groupBits(inverted)}) e soma 1 (${groupBits(plusOne)}), resultando em ${formatBigInt(-tc)}. Portanto, o valor é ${formatBigInt(tc)}.`
+        : `MSB = 0. Em complemento de dois, o valor não negativo coincide com o valor sem sinal: ${formatBigInt(tc)}.`;
+
+      const bcdText = bcd.valid
+        ? `Quartetos interpretados como dígitos decimais: ${bcd.digits}. Valor decimal: ${bcd.digits.replace(/^0+(?=\d)/, "") || "0"}.`
+        : `Não é BCD válido, pois há quarteto(s) correspondente(s) a ${bcd.text.replace("inválido ", "")}. Em BCD, cada quarteto deve representar apenas 0 a 9.`;
+
+      $("steps").innerHTML = `
+        <div class="step"><div class="k">Padrão</div><div class="v">${groupBits(bits)}</div></div>
+        <div class="step"><div class="k">MSB</div><div class="v">${signBit}</div></div>
+        <div class="step"><div class="k">Sem sinal</div><div class="v">${formatBigInt(unsigned)}</div></div>
+        <div class="step"><div class="k">BCD</div><div class="v">${bcdText}</div></div>
+        <div class="step"><div class="k">Sinal-magnitude</div><div class="v">sinal = ${signBit}; magnitude = ${magnitudeBits}₂ = ${formatBigInt(parseBits(magnitudeBits))}; valor = ${sm}</div></div>
+        <div class="step"><div class="k">Comp. a um</div><div class="v">${ocText}</div></div>
+        <div class="step"><div class="k">Comp. de dois</div><div class="v">${tcText}</div></div>
+      `;
+    }
+
+    function update() {
+      const warningEl = $("warning");
+      try {
+        const base = $("inputBase").value;
+        const n = parseInt($("wordSize").value, 10);
+        const cleaned = cleanInput($("valueInput").value, base);
+        const rawBits = base === "bin" ? cleaned : hexToBits(cleaned);
+        const normalized = normalizeToWord(rawBits, n);
+        const bits = normalized.bits;
+        const hex = bitsToHex(bits).padStart(n / 4, "0");
+        const unsigned = parseBits(bits);
+        const bcd = bcdValue(bits);
+        const sm = signMagnitudeValue(bits);
+        const oc = onesComplementValue(bits);
+        const tc = twosComplementValue(bits);
+
+        warningEl.classList.toggle("active", Boolean(normalized.warning));
+        warningEl.textContent = normalized.warning;
+
+        $("binaryOut").textContent = groupBits(bits) + "₂";
+        $("hexOut").textContent = hex + "₁₆";
+        $("unsignedOut").textContent = formatBigInt(unsigned);
+        $("bcdOut").textContent = bcd.text;
+        $("signMagnitudeOut").textContent = sm;
+        $("onesOut").textContent = oc.valueText;
+        $("twosOut").textContent = formatBigInt(tc);
+
+        renderNibbleTable(bits);
+        renderSteps(bits, unsigned, bcd, sm, oc, tc);
+        renderRanges(n);
+      } catch (err) {
+        warningEl.classList.add("active");
+        warningEl.textContent = err.message;
+        $("binaryOut").textContent = "—";
+        $("hexOut").textContent = "—";
+        $("unsignedOut").textContent = "—";
+        $("bcdOut").textContent = "—";
+        $("signMagnitudeOut").textContent = "—";
+        $("onesOut").textContent = "—";
+        $("twosOut").textContent = "—";
+        $("nibbleTable").innerHTML = "";
+        $("steps").innerHTML = "";
+        $("rangeTable").innerHTML = "";
+      }
+    }
+
+    ["valueInput", "inputBase", "wordSize"].forEach(id => {
+      $(id).addEventListener("input", update);
+      $(id).addEventListener("change", update);
+    });
+
+    document.querySelectorAll("button[data-value]").forEach(button => {
+      button.addEventListener("click", () => {
+        $("inputBase").value = button.dataset.base;
+        $("valueInput").value = button.dataset.value;
+        $("wordSize").value = button.dataset.size;
+        update();
+      });
+    });
+
+    update();
+  </script>
+</body>
+</html>
