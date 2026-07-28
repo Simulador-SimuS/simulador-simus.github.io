@@ -128,11 +128,17 @@ Visualization in a hexadecimal grid with the following characteristics:
 
 ## 3. File Toolbar
 
-Located at the top of the left panel, it offers three buttons for file management:
+Located at the top of the left panel, it offers buttons for file management and auxiliary windows:
 
 - **📂 Open:** Opens an assembly file from the disk (.txt, .asm, .sap). The content is loaded into the editor, replacing the current code. The file name is displayed on the Editor tab.
 - **💾 Save As...:** Saves the current code from the editor to a file on disk. It opens a browser dialog to choose the name and location. Default extension: .asm.
 - **✔ Compile:** Compiles the assembly code in the editor. If there are errors, the Errors tab is automatically activated with the list of issues. If compilation is successful, the compiled code is loaded into memory, and the Execution tab is shown. The PC is positioned at the address defined by the ORG directive.
+- **Terminal:** Shows or hides the text console pop-up window. The window can be moved by dragging its title bar.
+- **Video:** Shows or hides the virtual graphic display pop-up window. This window can also be moved by dragging its title bar.
+
+### 3.1. Pop-up Windows
+
+The Terminal and Video windows are independent floating windows. To reposition them, click and drag the top bar of the window. The red circular button on the title bar closes/hides the window.
 
 ---
 
@@ -254,17 +260,60 @@ The Sapiens processor implements the following categories of instructions:
 #### Available TRAP Operations:
 
 - The TRAP number is passed in the accumulator. Additional parameters are passed in the memory address of the operand.
+- The `TRAP` instruction returns status codes in the accumulator, but it does not update the flags. Before testing the return value with `JZ` or `JNZ`, use an instruction that updates flags without changing the value, such as `OR #0`:
+
+```asm
+LDA #20
+TRAP VIDEO_CONFIG
+OR #0
+JNZ ERROR
+```
 
 | Instruction | Function |
 |-------------|----------|
 | #0 | Clears the console terminal |
-| #11 | Reads a character from the terminal and saves it in the accumulator and the operand's memory address |
+| #1 | Reads a character from the terminal and saves it in the accumulator and the operand's memory address |
 | #2 | Writes a character from the operand's memory address to the terminal |
 | #3 | Reads a string from the terminal and saves it at the operand's memory address |
 | #4 | Writes a string starting from the operand address (until a NULL is found) |
 | #5 | Delay (Waits from 0 to 65535 ms) |
 | #6 | Beep (Audio Synthesizer). Receives frequency and duration as parameters |
 | #7 | Returns a pseudo-random number between 0 and 99 in the accumulator |
+| #20 | Configures the virtual graphic display. The operand points to a `DW base` block, where `base` is the start of video memory. |
+| #21 | Clears video memory with one color. The operand points to `DB color`. |
+| #22 | Draws one pixel. The operand points to `DB x, y, color`. |
+| #23 | Draws a line. The operand points to `DB x0, y0, x1, y1, color`. |
+| #24 | Draws a rectangle. The operand points to `DB x, y, width, height, color, filled`. |
+| #25 | Draws a circle. The operand points to `DB cx, cy, radius, color, filled`. |
+
+#### Virtual Graphic Display
+
+The virtual graphic display has a resolution of 128 × 64 pixels. Video memory occupies 8192 consecutive bytes, with 1 byte per pixel. `TRAP #20` defines which region of the 64 KB memory is used as the framebuffer. The base address must be aligned to a multiple of 256, and the area `base + 8192` must not exceed the memory limit.
+
+The pixel layout is linear:
+
+```text
+address = base + (y * 128) + x
+```
+
+Colors use the 8-bit `RRRGGGBB` format:
+
+| Value | Approximate color |
+|-------|-------------------|
+| `224` / `0xE0` | Red |
+| `28` / `0x1C` | Green |
+| `3` / `0x03` | Blue |
+| `252` / `0xFC` | Yellow |
+| `255` / `0xFF` | White |
+
+Main return values for `TRAP #20`:
+
+| AC | Meaning |
+|----|---------|
+| 0 | Success |
+| 1 | Base address is not aligned to 256 bytes |
+| 2 | Video area exceeds the memory limit |
+| 4 | Used by graphic TRAPs when video has not been configured yet |
 
 ---
 
@@ -305,10 +354,14 @@ The SimuS assembler recognizes the following directives:
 |-----------|-------------|---------|--------|
 | `ORG address` | Defines the starting address of the program | `ORG 0` | Program starts at address 0 |
 | `END` | Marks the end of the source code | `END` | Last line of the file |
-| `DB value` | Defines a byte (8 bits) | `DB #FF` | Stores the byte FF in memory |
-| `DW value` | Defines a word (16 bits) | `DW #1234` | Stores the word 1234 (little-endian) |
+| `DB value[, value...]` | Defines one or more bytes (8 bits) | `DB 0xFF, 10, 1010B` | Stores the byte list in memory |
+| `DW value[, value...]` | Defines one or more words (16 bits) | `DW 0x1234, 1000` | Stores words in little-endian format |
 | `DS quantity` | Defines space (reserves bytes) | `DS 10` | Reserves 10 zeroed bytes |
-| `LABEL: EQU value` | Defines a constant (: is optional) | `TESTE: EQU 10`| TESTE will be equal to 10 |
+| `LABEL EQU value` | Defines a constant | `TESTE EQU 10` | TESTE will be equal to 10 |
+
+> **Note:** for constants, use `LABEL EQU value` without a colon. The form `LABEL: EQU value` first creates a label at the current address and may not define the constant as expected.
+>
+> In `DB` and `DW` directives, do not use `#` before immediate values. Write `DB 0xFF` or `DB 0FFH`, not `DB #FF`.
 
 ### Use of Labels:
 
@@ -324,6 +377,7 @@ LOOP:
 * Labels must start with a letter and can contain letters, numbers, and underscores.
 * They are automatically converted to uppercase by the assembler.
 * They can be used as operands in jump and memory access instructions.
+* You can use `LABEL+offset` to access bytes following a label. The currently accepted offset range is 1 to 8. For example, if `WORD: DW 0x1234`, then `WORD` points to the low byte (`0x34`) and `WORD+1` points to the high byte (`0x12`).
 
 ---
 
@@ -388,6 +442,58 @@ END
 
 ---
 
+### 9.4. Virtual Graphic Display
+
+Configures video memory at `0x4000`, clears the screen, draws a filled rectangle, a line, and a circle:
+
+```assembly
+ORG 0
+
+MAIN:
+    LDA #20
+    TRAP VIDEO_CONFIG
+    OR #0
+    JNZ ERROR
+
+    LDA #21
+    TRAP CLEAR
+
+    LDA #24
+    TRAP RECTANGLE
+
+    LDA #23
+    TRAP LINE
+
+    LDA #25
+    TRAP CIRCLE
+
+    HLT
+
+ERROR:
+    HLT
+
+VIDEO_CONFIG:
+    DW VIDEO_BASE
+
+CLEAR:
+    DB 3              ; blue
+
+RECTANGLE:
+    DB 48, 16, 32, 32, 224, 1
+
+LINE:
+    DB 0, 63, 127, 0, 28
+
+CIRCLE:
+    DB 64, 32, 18, 252, 0
+
+VIDEO_BASE EQU 16384 ; 0x4000
+
+END MAIN
+```
+
+---
+
 ## 10. Troubleshooting Common Issues
 
 ### Error: "Invalid Instruction"
@@ -413,6 +519,14 @@ END
 ### IN does not read the typed value
 
 * Remember to press ENTER after typing the hexadecimal value. The green LED must light up, indicating that the data is ready.
+
+### Graphic display does not show the drawing
+
+* Check that the program executed `TRAP #20` before the other graphic TRAPs.
+* After `TRAP #20`, use `OR #0` or `SUB #0` before `JZ/JNZ` to correctly test the value returned in AC.
+* The video memory base must be a multiple of 256. A recommended value is `0x4000` (`16384`).
+* Use `VIDEO_BASE EQU 16384` without a colon to define the constant.
+* Click the **Video** button if the window is not visible.
 
 ---
 
@@ -443,4 +557,3 @@ SimuS is a complete tool for learning computer architecture and assembly program
 This manual covers the essential aspects of the simulator. For additional questions or technical support, consult the Sapiens processor documentation or contact the developer.
 
 **Happy studying and happy programming!**
-

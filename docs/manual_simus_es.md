@@ -128,11 +128,17 @@ Visualización en una cuadrícula hexadecimal con las siguientes característica
 
 ## 3. Barra de Herramientas de Archivo
 
-Ubicada en la parte superior del panel izquierdo, ofrece tres botones para la gestión de archivos:
+Ubicada en la parte superior del panel izquierdo, ofrece botones para la gestión de archivos y ventanas auxiliares:
 
 - **📂 Abrir:** Abre un archivo assembly desde el disco (.txt, .asm, .sap). El contenido se carga en el editor, reemplazando el código actual. El nombre del archivo se muestra en la pestaña del Editor.
 - **💾 Guardar Como...:** Guarda el código actual del editor en un archivo en el disco. Abre el diálogo del navegador para elegir el nombre y la ubicación. Extensión por defecto: .asm.
 - **✔ Compilar:** Compila el código assembly en el editor. Si hay errores, la pestaña Errores se activa automáticamente con la lista de problemas. Si la compilación es exitosa, el código compilado se carga en la memoria y se muestra la pestaña Ejecución. El PC se posiciona en la dirección definida por la directiva ORG.
+- **Terminal:** Muestra u oculta la ventana emergente de la consola de texto. La ventana se puede mover arrastrando su barra de título.
+- **Video:** Muestra u oculta la ventana emergente del display gráfico virtual. Esta ventana también se puede mover arrastrando su barra de título.
+
+### 3.1. Ventanas Emergentes
+
+Las ventanas Terminal y Video son ventanas flotantes independientes. Para reposicionarlas, haga clic y arrastre la barra superior de la ventana. El botón circular rojo de la barra de título cierra/oculta la ventana.
 
 ---
 
@@ -247,17 +253,60 @@ El procesador Sapiens implementa las siguientes categorías de instrucciones:
 #### Operaciones de TRAP Disponibles:
 
 - El número del TRAP se pasa en el acumulador. Los parámetros adicionales se pasan en la dirección de memoria del operando.
+- La instrucción `TRAP` devuelve códigos de resultado en el acumulador, pero no actualiza los flags. Antes de probar el retorno con `JZ` o `JNZ`, use una instrucción que actualice los flags sin cambiar el valor, como `OR #0`:
+
+```asm
+LDA #20
+TRAP VIDEO_CONFIG
+OR #0
+JNZ ERROR
+```
 
 | Instrucción | Función |
 |-----------|--------|
 | #0 | Limpia la terminal de la consola |
-| #11 | Lee un carácter de la terminal y lo guarda en el acumulador y en la dirección de memoria del operando |
+| #1 | Lee un carácter de la terminal y lo guarda en el acumulador y en la dirección de memoria del operando |
 | #2 | Escribe un carácter desde la dirección de memoria del operando en la terminal |
 | #3 | Lee una cadena de la terminal y la guarda en la dirección de memoria del operando |
 | #4 | Escribe una cadena a partir de la dirección del operando (hasta encontrar un NULL) |
 | #5 | Delay (Espera de 0 a 65535 ms) |
 | #6 | Beep (Sintetizador de Audio). Recibe frecuencia y duración como parámetros |
 | #7 | Devuelve un número pseudoaleatorio entre 0 y 99 en el acumulador |
+| #20 | Configura el display gráfico virtual. El operando apunta a un bloque `DW base`, donde `base` es el inicio de la memoria de video. |
+| #21 | Limpia la memoria de video con un color. El operando apunta a `DB color`. |
+| #22 | Dibuja un pixel. El operando apunta a `DB x, y, color`. |
+| #23 | Dibuja una línea. El operando apunta a `DB x0, y0, x1, y1, color`. |
+| #24 | Dibuja un rectángulo. El operando apunta a `DB x, y, ancho, alto, color, relleno`. |
+| #25 | Dibuja un círculo. El operando apunta a `DB cx, cy, radio, color, relleno`. |
+
+#### Display Gráfico Virtual
+
+El display gráfico virtual tiene resolución de 128 × 64 pixels. La memoria de video ocupa 8192 bytes consecutivos, con 1 byte por pixel. La `TRAP #20` define qué región de la memoria de 64 KB se usará como framebuffer. La dirección base debe estar alineada a un múltiplo de 256, y el área `base + 8192` no puede superar el límite de la memoria.
+
+La distribución de los pixels es lineal:
+
+```text
+dirección = base + (y * 128) + x
+```
+
+Los colores usan el formato de 8 bits `RRRGGGBB`:
+
+| Valor | Color aproximado |
+|-------|------------------|
+| `224` / `0xE0` | Rojo |
+| `28` / `0x1C` | Verde |
+| `3` / `0x03` | Azul |
+| `252` / `0xFC` | Amarillo |
+| `255` / `0xFF` | Blanco |
+
+Valores principales de retorno de la `TRAP #20`:
+
+| AC | Significado |
+|----|-------------|
+| 0 | Éxito |
+| 1 | La dirección base no está alineada a 256 bytes |
+| 2 | El área de video supera el límite de la memoria |
+| 4 | Usado por las TRAPs gráficas cuando el video aún no fue configurado |
 
 ---
 
@@ -298,10 +347,14 @@ El ensamblador de SimuS reconoce las siguientes directivas:
 |----------|-------------|---------|--------|
 | `ORG dirección` | Define la dirección inicial del programa | `ORG 0` | El programa se inicia en la dirección 0 |
 | `END` | Marca el fin del código fuente | `END` | Última línea del archivo |
-| `DB valor` | Define un byte (8 bits) | `DB #FF` | Almacena el byte FF en la memoria |
-| `DW valor` | Define una palabra / word (16 bits) | `DW #1234` | Almacena la word 1234 (little-endian) |
+| `DB valor[, valor...]` | Define uno o más bytes (8 bits) | `DB 0xFF, 10, 1010B` | Almacena la lista de bytes en la memoria |
+| `DW valor[, valor...]` | Define una o más palabras / words (16 bits) | `DW 0x1234, 1000` | Almacena words en formato little-endian |
 | `DS cantidad` | Define espacio (reserva bytes) | `DS 10` | Reserva 10 bytes en cero |
-| `LABEL: EQU valor` | Define una constante (: es opcional) | `TESTE: EQU 10` | TESTE será igual a 10 |
+| `LABEL EQU valor` | Define una constante | `TESTE EQU 10` | TESTE será igual a 10 |
+
+> **Atención:** para constantes, use `LABEL EQU valor` sin dos puntos. La forma `LABEL: EQU valor` crea primero una etiqueta en la dirección actual y puede no definir la constante como se espera.
+>
+> En las directivas `DB` y `DW`, no use `#` antes de valores inmediatos. Escriba `DB 0xFF` o `DB 0FFH`, no `DB #FF`.
 
 ### Uso de Etiquetas (Labels):
 
@@ -317,6 +370,7 @@ LOOP:
 * Las etiquetas deben comenzar con una letra y pueden contener letras, números y guion bajo (_).
 * El montador las convierte automáticamente a mayúsculas.
 * Se pueden usar como operandos en instrucciones de salto y acceso a la memoria.
+* Se puede usar `ETIQUETA+desplazamiento` para acceder a los bytes siguientes a una etiqueta. El rango de desplazamiento aceptado actualmente es de 1 a 8. Por ejemplo, si `PALABRA: DW 0x1234`, entonces `PALABRA` apunta al byte bajo (`0x34`) y `PALABRA+1` apunta al byte alto (`0x12`).
 
 ---
 
@@ -381,6 +435,58 @@ END
 
 ---
 
+### 9.4. Display Gráfico Virtual
+
+Configura la memoria de video en `0x4000`, limpia la pantalla, dibuja un rectángulo relleno, una línea y un círculo:
+
+```assembly
+ORG 0
+
+MAIN:
+    LDA #20
+    TRAP VIDEO_CONFIG
+    OR #0
+    JNZ ERROR
+
+    LDA #21
+    TRAP LIMPIAR
+
+    LDA #24
+    TRAP RECTANGULO
+
+    LDA #23
+    TRAP LINEA
+
+    LDA #25
+    TRAP CIRCULO
+
+    HLT
+
+ERROR:
+    HLT
+
+VIDEO_CONFIG:
+    DW VIDEO_BASE
+
+LIMPIAR:
+    DB 3              ; azul
+
+RECTANGULO:
+    DB 48, 16, 32, 32, 224, 1
+
+LINEA:
+    DB 0, 63, 127, 0, 28
+
+CIRCULO:
+    DB 64, 32, 18, 252, 0
+
+VIDEO_BASE EQU 16384 ; 0x4000
+
+END MAIN
+```
+
+---
+
 ## 10. Resolución de Problemas Comunes
 
 ### Error: "Instrucción Inválida"
@@ -406,6 +512,14 @@ END
 ### IN no lee el valor escrito
 
 * Recuerde presionar ENTER después de escribir el valor hexadecimal. El LED verde debe encenderse indicando que el dato está listo.
+
+### El display gráfico no muestra el dibujo
+
+* Verifique que el programa haya ejecutado `TRAP #20` antes de las demás TRAPs gráficas.
+* Después de `TRAP #20`, use `OR #0` o `SUB #0` antes de `JZ/JNZ` para probar correctamente el valor devuelto en AC.
+* La base de la memoria de video debe ser múltiplo de 256. Un valor recomendado es `0x4000` (`16384`).
+* Use `VIDEO_BASE EQU 16384` sin dos puntos para definir la constante.
+* Haga clic en el botón **Video** si la ventana no está visible.
 
 ---
 
