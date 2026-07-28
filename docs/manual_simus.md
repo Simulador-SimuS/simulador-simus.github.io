@@ -6,7 +6,7 @@
 
 ## 1. Introdução
 
-O SimuS (Simulador Sapiens) é uma ferramenta educacional desenvolvida para simular o funcionamento do processador Sapiens. Este simulador permite aos estudantes escrever, compilar e executar programas em linguagem assembly, visualizando em tempo real o comportamento do processador, registradores, flags e memória.
+O SimuS (Simulador Sapiens) é uma ferramenta educacional desenvolvida para simular o funcionamento do processador Sapiens. Este simulador permite aos estudantes escrever, compilar e executar programas em linguagem de montagem, visualizando em tempo real o comportamento do processador, registradores, flags e memória.
 
 O SimuS oferece recursos avançados de depuração, incluindo execução passo a passo, breakpoints, visualização de memória e portas de entrada/saída simuladas.
 
@@ -24,9 +24,9 @@ Este painel contém três abas que permitem editar código, visualizar erros e a
 
 #### 2.1.1. Aba Editor
 
-Área de edição de código assembly com as seguintes características:
+Área de edição de código em linguagem de montagem com as seguintes características:
 
-- Editor de texto com syntax highlighting para código assembly
+- Editor de texto com destaque de sintaxa para código em linguagem de montagem
 - Fundo escuro para reduzir fadiga visual durante programação
 - Fonte monoespaçada (Consolas) para melhor alinhamento do código
 - Suporte a comentários (linhas iniciadas com ponto e vírgula ;)
@@ -38,15 +38,15 @@ Exibe mensagens de erro geradas durante a compilação:
 - Lista todos os erros encontrados no código fonte
 - Cada erro mostra a linha e uma descrição do problema
 - Clique em um erro para posicionar o cursor na linha correspondente no editor
-- Badge vermelho no título da aba indica o número de erros encontrados
+- Indicador vermelho no título da aba mostra o número de erros encontrados
 
 #### 2.1.3. Aba Execução
 
 Visualização do código compilado com recursos de depuração:
 
-- Exibe o código assembly com endereços de memória em hexadecimal
+- Exibe o código em linguagem de montagem com endereços de memória em hexadecimal
 - Destaque em amarelo na linha atual de execução (PC - Program Counter)
-- Rótulos (labels) exibidos em cor laranja para fácil identificação
+- Rótulos (*labels*) exibidos em cor laranja para fácil identificação
 - Clique em qualquer linha para adicionar/remover breakpoint (marcado em vermelho no endereço)
 - Rolagem automática para acompanhar a execução do programa
 
@@ -59,10 +59,10 @@ Este painel concentra todos os controles de execução e visualização do estad
 Cinco botões com cores distintas para controlar a execução:
 
 - **Passo (Laranja):** Executa uma única instrução e para. Ideal para depuração detalhada.
-- **Executar (Verde):** Executa o programa continuamente em velocidade normal (50ms por instrução). Para automaticamente em breakpoints ou ao encontrar HLT.
-- **Turbo (Rosa):** Executa o programa em alta velocidade (1000 instruções por ciclo). Útil para programas longos. Também respeita breakpoints.
+- **Executar (Verde):** Executa o programa continuamente em velocidade normal (50ms por instrução). Para automaticamente em *breakpoints* ou ao encontrar a instrução `HLT`.
+- **Turbo (Rosa):** Executa o programa em alta velocidade (1000 instruções por ciclo). Útil para programas longos. Também respeita *breakpoints*.
 - **Parar (Vermelho):** Interrompe a execução em qualquer modo (Executar ou Turbo).
-- **Reset (Preto):** Reinicia o processador ao estado inicial após um HLT. Restaura PC, registradores e portas de I/O, mas preserva o conteúdo da memória.
+- **Reset (Preto):** Reinicia o processador ao estado inicial após uma instrução `HLT`. Restaura PC, registradores e portas de E/S, mas preserva o conteúdo da memória.
 
 #### 2.2.2. Barra de Status
 
@@ -74,7 +74,7 @@ Três caixas exibindo os valores dos registradores principais em hexadecimal:
 
 - **AC (Acumulador):** Registrador de 8 bits usado para operações aritméticas e lógicas (formato: XX)
 - **PC (Program Counter):** Registrador de 16 bits que aponta para o endereço da próxima instrução (formato: XXXX)
-- **SP (Stack Pointer):** Registrador de 16 bits que aponta para o topo da pilha (formato: XXXX, com valor inicial em 0xFFFF)
+- **SP (Stack Pointer):** Registrador de 16 bits que aponta para o topo da pilha (formato: XXXX, com valor inicial em FFFF)
 
 #### 2.2.4. Instrução Atual
 
@@ -92,10 +92,10 @@ Três indicadores visuais que mostram o estado dos flags do processador:
 
 Interface simulada de periféricos com quatro componentes:
 
-- **Banner - Texto:** Display de texto largo que exibe caracteres ASCII enviados pela instrução OUT 3. Suporta múltiplas linhas e texto bidirecional. Exemplo: *"Sapiens 2.0"*.
-- **Entrada (IN) - Hex/Bin:** Campo de texto onde o usuário digita valores hexadecimais (00-FF) ou binários (8 bits) que serão lidos pela instrução IN 0. Pressione ENTER após digitar para confirmar o valor. Um LED verde acende quando há dado disponível.
-- **Saída (OUT) - Hex/Bin:** Display hexadecimal/binário que mostra o último valor enviado pela instrução OUT 0. Formato: XX ou XXXXXXXX.
-- **LED de Status:** Indicador verde que acende quando há dado digitado e confirmado na entrada, disponível para leitura via IN 1 (porta de status).
+- **Banner - Texto:** *Display* de texto largo que exibe caracteres ASCII enviados pela instrução `OUT 3`. Suporta múltiplas linhas e texto bidirecional. Exemplo: *"Sapiens 2.0"*.
+- **Entrada (IN) - Hex/Bin:** Campo de texto onde o usuário digita valores hexadecimais (00-FF) ou binários (8 bits) que serão lidos pela instrução `IN 0`. Pressione `ENTER` após digitar para confirmar o valor. Um LED verde acende quando há dado disponível.
+- **Saída (OUT) - Hex/Bin:** Display hexadecimal/binário que mostra o último valor enviado pela instrução `OUT 0`. Formato: XX ou XXXXXXXX.
+- **LED de Status:** Indicador verde que acende quando há dado digitado e confirmado na entrada, disponível para leitura via `IN 1` (porta de *status*).
 
 ### 2.3. Painel Direito - Visualização da Memória
 
@@ -130,11 +130,11 @@ Visualização em grade hexadecimal com as seguintes características:
 
 Localizada no topo do painel esquerdo, oferece botões para gerenciamento de arquivos e janelas auxiliares:
 
-- **📂 Abrir:** Abre um arquivo assembly do disco (.txt, .asm, .sap). O conteúdo é carregado no editor, substituindo o código atual. O nome do arquivo é exibido na aba do Editor.
+- **📂 Abrir:** Abre um arquivo do disco (.txt, .asm, .sap). O conteúdo é carregado no editor, substituindo o código atual. O nome do arquivo é exibido na aba **Editor**.
 - **💾 Salvar Como...:** Salva o código atual do editor em um arquivo no disco. Abre diálogo do navegador para escolher o nome e local. Extensão padrão: .asm.
-- **✔ Compilar:** Compila o código assembly no editor. Se houver erros, a aba Erros é ativada automaticamente com a lista de problemas. Se a compilação for bem-sucedida, o código compilado é carregado na memória e a aba Execução é exibida. O PC é posicionado no endereço definido pela diretiva ORG.
-- **Terminal:** Mostra ou esconde a janela pop-up da console de texto. A janela pode ser movida arrastando sua barra de título.
-- **Video:** Mostra ou esconde a janela pop-up do display gráfico virtual. A janela também pode ser movida pela barra de título.
+- **✔ Compilar:** Compila o código em linguagen de montagem no editor. Se houver erros, a aba **Erros** é ativada automaticamente com a lista de problemas. Se a compilação for bem-sucedida, o código compilado é carregado na memória e a aba Execução é exibida. O PC é posicionado no endereço definido pela diretiva ORG.
+- **Terminal:** Mostra ou esconde a janela *pop-up* da console de texto. A janela pode ser movida arrastando sua barra de título.
+- **Video:** Mostra ou esconde a janela *pop-up* do display gráfico virtual. A janela também pode ser movida pela barra de título.
 
 ### 3.1. Janelas Pop-up
 
@@ -146,22 +146,22 @@ O Terminal e o Video são janelas flutuantes independentes. Para reposicioná-la
 
 Siga estes passos para desenvolver e executar programas no SimuS:
 
-1. **Editar o Código:** Na aba Editor, escreva seu programa assembly. Use comentários (;) para documentar o código. Lembre-se de incluir a diretiva ORG para definir o endereço inicial e END para marcar o fim do programa.
+1. **Editar o Código:** Na aba **Editor**, escreva seu programa em linguagem de montagem. Use comentários (;) para documentar o código. Lembre-se de incluir a diretiva `ORG` para definir o endereço inicial e `END` para marcar o fim do programa.
 
-2. **Compilar:** Clique no botão ✔ Compilar. Se houver erros, corrija-os conforme indicado na aba Erros e compile novamente.
+2. **Compilar:** Clique no botão `✔ Compilar`. Se houver erros, corrija-os conforme indicado na aba **Erros** e compile novamente.
 
-3. **Definir Breakpoints (Opcional):** Na aba Execução, clique nas linhas onde deseja pausar a execução. Um círculo vermelho aparecerá no endereço.
+3. **Definir Breakpoints (Opcional):** Na aba **Execução**, clique nas linhas onde deseja pausar a execução. Um círculo vermelho aparecerá no endereço.
 
 4. **Executar:** Escolha um modo de execução:
    - Passo: Para depuração detalhada, instrução por instrução
    - Executar: Para velocidade normal, com visualização
    - Turbo: Para programas longos, execução máxima
 
-5. **Acompanhar a Execução:** Observe os registradores, flags, memória e portas de I/O sendo atualizados em tempo real. A linha atual é destacada em amarelo na aba Execução.
+5. **Acompanhar a Execução:** Observe os registradores, *flags*, memória e portas de E/S sendo atualizados em tempo real. A linha atual é destacada em amarelo na aba **Execução**.
 
-6. **Interagir com I/O:** Quando o programa executar IN 0, digite um valor hexadecimal no campo Entrada (Hex) e pressione ENTER. Valores enviados via OUT são exibidos automaticamente.
+6. **Interagir com E/S:** Quando o programa executar `IN 0`, digite um valor hexadecimal no campo Entrada (Hex) e pressione `ENTER`. Valores enviados via OUT são exibidos automaticamente.
 
-7. **Finalizar:** O programa para automaticamente ao encontrar HLT. Use o botão Reset para reiniciar e executar novamente.
+7. **Finalizar:** O programa para automaticamente ao encontrar a instrução `HLT`. Use o botão `RESET` para reiniciar e executar novamente.
 
 8. **Salvar:** Use 💾 Salvar Como... para guardar seu trabalho em arquivo.
 
@@ -239,7 +239,7 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | IN | Input | Lê dado da porta especificada para AC |
 | OUT | Output | Envia AC para porta especificada |
 
-#### Portas de I/O Disponíveis:
+#### Portas de E/S Disponíveis:
 
 | Instrução | Função |
 |-----------|--------|
@@ -272,15 +272,15 @@ JNZ ERRO
 
 | Instrução | Função |
 |-----------|--------|
-| #0 | Limpa o termminal da console |
+| #0 | Limpa o terminal da console |
 | #1 | Lê caractere do terminal e salva no acumulador e endereço de memória do operando.|
 | #2 | Escreve um caractere do endereço de memória do operando no terminal. |
-| #3 | Lê uma string do terminal e salva no endereço de memória do operando. |
-| #4 | Escreve uma cadeira a partir do endereço operando (até achar um NULL) |
+| #3 | Lê uma cadeia de caracteres do terminal e salva no endereço de memória do operando. |
+| #4 | Escreve uma cadeia de caracteres a partir do endereço operando (até achar um NULL) |
 | #5 | Delay (Aguarda de 0 a 65535 ms) |
-| #6 | Beep (Sintetizador de Áudio). Recebe frequencia e duração como parâmetros |
+| #6 | Beep (Sintetizador de Áudio). Recebe a frequência e duração como parâmetros |
 | #7 | Retorna um número pseudo-aleatório entre 0 e 99 no acumulador. |
-| #20 | Configura o display gráfico virtual. O operando aponta para um bloco `DW base`, onde `base` é o início da memória de vídeo. |
+| #20 | Configura o *display* gráfico virtual. O operando aponta para um bloco `DW base`, onde `base` é o início da memória de vídeo. |
 | #21 | Limpa a memória de vídeo com uma cor. O operando aponta para `DB cor`. |
 | #22 | Desenha um pixel. O operando aponta para `DB x, y, cor`. |
 | #23 | Desenha uma reta. O operando aponta para `DB x0, y0, x1, y1, cor`. |
@@ -289,7 +289,7 @@ JNZ ERRO
 
 #### Display Gráfico Virtual
 
-O display gráfico virtual tem resolução de 128 × 64 pixels. A memória de vídeo ocupa 8192 bytes consecutivos, com 1 byte por pixel. A `TRAP #20` define qual trecho da memória de 64 KB será usado como área de vídeo. O endereço base deve estar alinhado em múltiplo de 256 e a área `base + 8192` não pode ultrapassar o limite da memória.
+O *display* gráfico virtual tem resolução de 128 × 64 pixels. A memória de vídeo ocupa 8192 bytes consecutivos, com 1 byte por pixel. A `TRAP #20` define qual trecho da memória de 64 KB será usado como área de vídeo. O endereço base deve estar alinhado em múltiplo de 256 e a área `base + 8192` não pode ultrapassar o limite da memória.
 
 O layout dos pixels é linear:
 
@@ -332,8 +332,7 @@ O Sapiens suporta quatro modos de endereçamento, identificados pelos 2 bits mai
 ### Observações sobre Endereçamento:
 
 - Instruções sem operando (NOP, RET, PUSH, POP, etc.) ignoram o modo de endereçamento
-- Modo Indexado não está totalmente implementado - use com cautela
-- Prefixo @ indica indireto, # indica imediato, ausência indica direto
+- O uso do prefixo `@` no operando indica modo indireto, `#` indica o modo imediato, a ausência indica o modo direto
 
 ---
 
@@ -343,18 +342,18 @@ O Sapiens suporta vários tipos de formatos para os operando das instruçõoes:
 
 - Decimal: 10 - O número sem decoradores
 - Binário: 0b01010101 ou 01010101B
-- Hexadecimal: 0x05 ou 05H (tem começar com digito)
+- Hexadecimal: 0x05 ou 05H (tem começar com digito numérico)
 
-## 8. Diretivas do Assembler
+## 8. Diretivas do Montador
 
-O assembler do SimuS reconhece as seguintes diretivas:
+O montador do SimuS reconhece as seguintes diretivas:
 
 | Diretiva | Descrição | Exemplo | Efeito |
 |----------|-----------|---------|--------|
 | `ORG endereço` | Define o endereço inicial do programa | `ORG 0` | Programa inicia no endereço 0 |
 | `END` | Marca o fim do código fonte | `END` | Última linha do arquivo |
 | `DB valor[, valor...]` | Define um ou mais bytes (8 bits) | `DB 0xFF, 10, 1010B` | Armazena a lista de bytes na memória |
-| `DW valor[, valor...]` | Define uma ou mais words (16 bits) | `DW 0x1234, 1000` | Armazena words em little-endian |
+| `DW valor[, valor...]` | Define uma ou mais words (16 bits) | `DW 0x1234, 1000` | Armazena words em *little-endian* |
 | `DS quantidade` | Define espaço (reserva bytes) | `DS 10` | Reserva 10 bytes zerados |
 | `LABEL EQU valor` | Define uma constante | `TESTE EQU 10` | TESTE será igual 10 |
 
@@ -491,7 +490,7 @@ END MAIN
 ## 10. Resolução de Problemas Comuns
 
 ### Erro: "Instrução Inválida"
-- Verifique se o mnemônico está escrito corretamente. Lembre-se que o assembler não diferencia maiúsculas de minúsculas.
+- Verifique se o mnemônico está escrito corretamente. Lembre-se que o montador não diferencia maiúsculas de minúsculas.
 
 ### Erro: "Rótulo Não Definido"
 - Certifique-se de que o rótulo usado na instrução foi definido em algum lugar do código com dois pontos (:).
@@ -522,17 +521,17 @@ END MAIN
 - **Use comentários generosamente:** Documente o propósito de cada seção do código com linhas iniciadas por ponto e vírgula (;).
 - **Organize com rótulos:** Use nomes descritivos para rótulos (LOOP, INICIO, FIM, CALCULAR, etc.) para tornar o código mais legível.
 - **Teste incrementalmente:** Compile e teste pequenas partes do programa antes de adicionar mais funcionalidades.
-- **Use breakpoints estrategicamente:** Coloque breakpoints em pontos críticos (início de loops, chamadas de sub-rotinas, decisões) para facilitar depuração.
-- **Monitore os flags:** Observe N, Z e C durante execução para entender como as operações afetam o estado do processador.
-- **Sempre termine com HLT:** Garanta que todo caminho de execução termine com HLT para evitar comportamento imprevisível.
-- **Salve seu trabalho frequentemente:** Use o botão 💾 Salvar Como... regularmente para não perder progresso.
-- **Verifique a aba Memória:** Durante depuração, use o botão PC para navegar rapidamente até a instrução atual na visualização de memória.
+- **Use breakpoints estrategicamente:** Coloque *breakpoints* em pontos críticos (início de laços, chamadas de sub-rotinas, decisões) para facilitar depuração.
+- **Monitore os flags:** Observe as *flags* `N`, `Z` e `C` durante execução para entender como as operações afetam o estado do processador.
+- **Sempre termine com HLT:** Garanta que todo caminho de execução termine com `HLT` para evitar comportamento imprevisível.
+- **Salve seu trabalho frequentemente:** Use o botão `💾 Salvar Como...` regularmente para não perder progresso.
+- **Verifique a aba Memória:** Durante depuração, use o botão `PC` para navegar rapidamente até a instrução atual na visualização de memória.
 
 ---
 
 ## 12. Conclusão
 
-O SimuS é uma ferramenta completa para aprendizado de arquitetura de computadores e programação em assembly. Através de sua interface intuitiva e recursos avançados de depuração, estudantes podem experimentar conceitos fundamentais como:
+O SimuS é uma ferramenta completa para aprendizado de arquitetura de computadores e programação em linguagem de montagem. Através de sua interface intuitiva e recursos avançados de depuração, estudantes podem experimentar conceitos fundamentais como:
 
 - Ciclo de busca-decodificação-execução
 - Funcionamento de registradores e flags
