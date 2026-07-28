@@ -78,7 +78,7 @@ Three boxes displaying the values of the main registers in hexadecimal:
 
 #### 2.2.4. Current Instruction
 
-A box with a dark background displaying the mnemonic of the instruction currently pointed to by the PC. Example: `LDA #FF`. This yellow-gold highlighted view makes it easy to track execution.
+A box with a dark background displaying the mnemonic of the instruction currently pointed to by the PC. Example: `LDA #0xFF`. This yellow-gold highlighted view makes it easy to track execution.
 
 #### 2.2.5. Flags (Indicators)
 
@@ -288,7 +288,7 @@ JNZ ERROR
 
 #### Virtual Graphic Display
 
-The virtual graphic display has a resolution of 128 × 64 pixels. Video memory occupies 8192 consecutive bytes, with 1 byte per pixel. `TRAP #20` defines which region of the 64 KB memory is used as the framebuffer. The base address must be aligned to a multiple of 256, and the area `base + 8192` must not exceed the memory limit.
+The virtual graphic display has a resolution of 128 × 64 pixels. Video memory occupies 8192 consecutive bytes, with 1 byte per pixel. `TRAP #20` defines which region of the 64 KB memory is used as the video buffer. The base address must be aligned to a multiple of 256, and the area `base + 8192` must not exceed the memory limit.
 
 The pixel layout is linear:
 
@@ -361,8 +361,6 @@ The SimuS assembler recognizes the following directives:
 
 > **Note:** for constants, use `LABEL EQU value` without a colon. The form `LABEL: EQU value` first creates a label at the current address and may not define the constant as expected.
 >
-> In `DB` and `DW` directives, do not use `#` before immediate values. Write `DB 0xFF` or `DB 0FFH`, not `DB #FF`.
-
 ### Use of Labels:
 
 Labels can be defined before any instruction or directive, ending with a colon:

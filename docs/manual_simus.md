@@ -74,11 +74,11 @@ Três caixas exibindo os valores dos registradores principais em hexadecimal:
 
 - **AC (Acumulador):** Registrador de 8 bits usado para operações aritméticas e lógicas (formato: XX)
 - **PC (Program Counter):** Registrador de 16 bits que aponta para o endereço da próxima instrução (formato: XXXX)
-- **SP (Stack Pointer):** Registrador de 16 bits que aponta para o topo da pilha (formato: XXXX, inicializado em FFFF)
+- **SP (Stack Pointer):** Registrador de 16 bits que aponta para o topo da pilha (formato: XXXX, com valor inicial em 0xFFFF)
 
 #### 2.2.4. Instrução Atual
 
-Caixa com fundo escuro exibindo o mnemônico da instrução atualmente apontada pelo PC. Exemplo: `LDA #FF`. Esta visualização em destaque amarelo-dourado facilita o acompanhamento da execução.
+Caixa com fundo escuro exibindo o mnemônico da instrução atualmente apontada pelo PC. Exemplo: `LDA #0xFF`. Esta visualização em destaque amarelo-dourado facilita o acompanhamento da execução.
 
 #### 2.2.5. Flags (Sinalizadores)
 
@@ -289,7 +289,7 @@ JNZ ERRO
 
 #### Display Gráfico Virtual
 
-O display gráfico virtual tem resolução de 128 × 64 pixels. A memória de vídeo ocupa 8192 bytes consecutivos, com 1 byte por pixel. A `TRAP #20` define qual trecho da memória de 64 KB será usado como framebuffer. O endereço base deve estar alinhado em múltiplo de 256 e a área `base + 8192` não pode ultrapassar o limite da memória.
+O display gráfico virtual tem resolução de 128 × 64 pixels. A memória de vídeo ocupa 8192 bytes consecutivos, com 1 byte por pixel. A `TRAP #20` define qual trecho da memória de 64 KB será usado como área de vídeo. O endereço base deve estar alinhado em múltiplo de 256 e a área `base + 8192` não pode ultrapassar o limite da memória.
 
 O layout dos pixels é linear:
 
@@ -360,7 +360,6 @@ O assembler do SimuS reconhece as seguintes diretivas:
 
 > **Atenção:** para constantes, use `LABEL EQU valor` sem dois pontos. A forma `LABEL: EQU valor` cria primeiro um rótulo no endereço atual e pode não definir a constante como esperado.
 >
-> Nas diretivas `DB` e `DW`, não use `#` antes de valores imediatos. Escreva `DB 0xFF` ou `DB 0FFH`, e não `DB #FF`.
 
 ### Uso de Rótulos (Labels):
 

@@ -78,7 +78,7 @@ Tres casillas que muestran los valores de los registros principales en hexadecim
 
 #### 2.2.4. Instrucción Actual
 
-Casilla con fondo oscuro que muestra el mnemónico de la instrucción a la que apunta actualmente el PC. Ejemplo: `LDA #FF`. Esta visualización con resaltado amarillo dorado facilita el seguimiento de la ejecución.
+Casilla con fondo oscuro que muestra el mnemónico de la instrucción a la que apunta actualmente el PC. Ejemplo: `LDA #0xFF`. Esta visualización con resaltado amarillo dorado facilita el seguimiento de la ejecución.
 
 #### 2.2.5. Flags (Señaladores)
 
@@ -281,7 +281,7 @@ JNZ ERROR
 
 #### Display Gráfico Virtual
 
-El display gráfico virtual tiene resolución de 128 × 64 pixels. La memoria de video ocupa 8192 bytes consecutivos, con 1 byte por pixel. La `TRAP #20` define qué región de la memoria de 64 KB se usará como framebuffer. La dirección base debe estar alineada a un múltiplo de 256, y el área `base + 8192` no puede superar el límite de la memoria.
+El display gráfico virtual tiene resolución de 128 × 64 pixels. La memoria de video ocupa 8192 bytes consecutivos, con 1 byte por pixel. La `TRAP #20` define qué región de la memoria de 64 KB se usará como buffer. La dirección base debe estar alineada a un múltiplo de 256, y el área `base + 8192` no puede superar el límite de la memoria.
 
 La distribución de los pixels es lineal:
 
@@ -354,7 +354,6 @@ El ensamblador de SimuS reconoce las siguientes directivas:
 
 > **Atención:** para constantes, use `LABEL EQU valor` sin dos puntos. La forma `LABEL: EQU valor` crea primero una etiqueta en la dirección actual y puede no definir la constante como se espera.
 >
-> En las directivas `DB` y `DW`, no use `#` antes de valores inmediatos. Escriba `DB 0xFF` o `DB 0FFH`, no `DB #FF`.
 
 ### Uso de Etiquetas (Labels):
 
