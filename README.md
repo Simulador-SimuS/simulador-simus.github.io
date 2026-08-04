@@ -67,7 +67,7 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 - [Manual de usuário do SimuS Web (PT)](docs/manual_simus.md)
 - [Manual de usuario de SimuS Web (ES)](docs/manual_simus_es.md)
 - [SimuS Web User's Manual (EN)](docs/manual_simus_en.md)
-- [Colabore respondendo ao questionário de avaliação do SimuS Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)
+- **[Colabore respondendo ao questionário de avaliação do SimuS Web](https://forms.gle/PUVQ8RV5vdRxCXQcA)**
 
 ### Repositório
 Repositório com exemplos em linguagem de montagem do Sapiens:
