@@ -104,7 +104,7 @@ Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
 - [Conversor binário, hexadecimal e de inteiros com sinal](./tools/conversor_binhex_v090.html)
 - [Simulador de Cache](./tools/cache_simulator.html)
 - [Simulador de Escalonamento de Páginas de Memória Virtual](./tools/page_replacement_simulator.html)
--  Latência de acesso aos longo do tempol](./tools/latencia_interativa.html)
+- [Latência de acesso aos longo do tempol](./tools/latencia_interativa.html)
       
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
