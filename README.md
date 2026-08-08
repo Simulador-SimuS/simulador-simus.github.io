@@ -73,7 +73,13 @@ Ao longo do tempo diversos acréscimos foram feitos ao simulador SimuS, entre os
 Repositório com exemplos em linguagem de montagem do Sapiens:
 - [Código dos exemplos utilizados](https://github.com/Simulador-SimuS/SimuS/tree/master/Exemplos)
 
-# 2. Slides de apoio
+# 2. Ferramentas
+- [Conversor binário, hexadecimal e de inteiros com sinal](./tools/conversor_binhex_v090.html)
+- [Simulador de Cache](./tools/cache_simulator.html)
+- [Simulador de Escalonamento de Páginas de Memória Virtual](./tools/page_replacement_simulator.html)
+- [Latência de acesso aos longo do tempo](./tools/latencia_interativa.html)
+
+# 3. Slides de apoio
 Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
 
   - [Slides do Capítulo 1](./docs/Capítulo 1.pdf)
@@ -85,7 +91,7 @@ Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Compu
   - [Slides do Capítulo 7](./docs/Capítulo 7.pdf)
   - [Slides do Capítulo 8](./docs/Capítulo 8.pdf)
     
-# 3. Exercícios resolvidos
+# 4. Exercícios resolvidos
 Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
 
   - [Exercícios do Capítulo 1](./docs/Exercicios01.pdf)
@@ -97,14 +103,9 @@ Exercícios resolvidos do livro **Arquitetura e Organização de Computadores**:
   - [Exercícios do Capítulo 7](./docs/Exercicios07.pdf)
   - [Exercícios do Capítulo 8](./docs/Exercicios08.pdf)
 
-# 4. Histórico
+# 5. Histórico
 - [Histórico do livro Arquitetura e Organização de Computadores ](docs/historia.md)
 
-# 5. Ferramentas
-- [Conversor binário, hexadecimal e de inteiros com sinal](./tools/conversor_binhex_v090.html)
-- [Simulador de Cache](./tools/cache_simulator.html)
-- [Simulador de Escalonamento de Páginas de Memória Virtual](./tools/page_replacement_simulator.html)
-- [Latência de acesso aos longo do tempo](./tools/latencia_interativa.html)
       
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XWJPK4F3P"></script>
