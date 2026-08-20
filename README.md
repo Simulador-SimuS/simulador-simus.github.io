@@ -77,7 +77,7 @@ Repositório com exemplos em linguagem de montagem do Sapiens:
 - [Conversor binário, hexadecimal e de inteiros com sinal](./tools/conversor_binhex_v090.html)
 - [Simulador de Cache](./tools/cache_simulator.html)
 - [Simulador de Escalonamento de Páginas de Memória Virtual](./tools/page_replacement_simulator.html)
-- [Latência de acesso aos longo do tempo](./tools/latencia_interativa.html)
+- [Latência de acesso aos longo do tempo](./tools/latencia-interativa.html)
 
 # 3. Slides de apoio
 Slides de apoio para o conteúdo do livro **Arquitetura e Organização de Computadores**:
