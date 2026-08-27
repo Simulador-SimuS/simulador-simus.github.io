@@ -388,8 +388,8 @@ Programa que aguarda entrada do usuário e ecoa o valor:
 ORG 0
 LOOP:
     IN 1          ; Lê status
-    OR #0         ; Operação para setar o carry
-    JZ LOOP       ; Aguarda dado
+    OR #0         ; Verifica o valor lido
+    JZ LOOP       ; Aguarda dado eqto for 0 
     IN 0          ; Lê valor
     OUT 0         ; Exibe valor
     HLT
