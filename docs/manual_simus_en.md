@@ -390,6 +390,7 @@ A program that waits for user input and echoes the value back:
 ORG 0
 LOOP:
     IN 1          ; Read status
+    OR #0         ; Verify value
     JZ LOOP       ; Wait for data
     IN 0          ; Read value
     OUT 0         ; Display value
@@ -407,13 +408,15 @@ Counts from 0 to 9 and stops:
 ORG 0
     LDA #0        ; Start at 0
 LOOP:
+    LDA CONT      ; Load counter
     OUT 0         ; Show value
     ADD #1        ; Increment
+    STA CONT      ; Save counter value
     SUB #10       ; Compare with 10
     JNZ LOOP      ; Continue if != 10
     HLT
 END
-
+CONT:  DB 0 
 ```
 
 ### 9.3. Subroutine with Stack
@@ -421,44 +424,46 @@ END
 Demonstrates the use of JSR, RET, and PUSH/POP:
 
 ```assembly
-; Passagem de parâmetro pela pilha
-; Resultado retornado no acumulador
+; Passing a parameter on the stack
+; Result returned in the accumulator
 
 ORG 0
-    LDA #42          ; Parâmetro da sub-rotina
-    PUSH             ; Empilha o parâmetro
-    JSR DOBRO        ; JSR empilha o endereço de retorno
-    OUT 0            ; Mostra o resultado: 84
+    LDA #42          ; Subroutine parameter
+    PUSH             ; Pushes the parameter onto the stack
+    JSR DOBRO        ; JSR pushes the return address onto the stack
+    OUT 0            ; Shows the result: 84
     HLT
 
 DOBRO:
-    ; Ao entrar na sub-rotina, o topo da pilha contém
-    ; o endereço de retorno colocado por JSR.
-    ; Abaixo dele está o parâmetro empilhado pelo programa principal.
+    ; When entering the subroutine, the top of the stack contains
+    ; the return address placed there by JSR.
+    ; Below it is the parameter pushed by the main program.
 
-    POP              ; Byte baixo do endereço de retorno
+    POP              ; Low byte of the return address
     STA RET
-    POP              ; Byte alto do endereço de retorno
+    POP              ; High byte of the return address
     STA RET+1
-    POP              ; Recupera o parâmetro
+    POP              ; Retrieves the parameter
     STA PARAM
-    ; Calcula PARAM * 2
+
+    ; Computes PARAM * 2
     LDA PARAM
     ADD PARAM
     STA RESULT
 
-    ; Restaura o endereço de retorno.
-    ; RET desempilha primeiro o byte baixo e depois o byte alto.
-    ; Como PUSH empilha e decrementa SP, empilhamos primeiro o byte alto.
+    ; Restores the return address.
+    ; RET first pops the low byte and then the high byte.
+    ; Since PUSH stores the value and decrements SP, we push the high byte first.
+
     LDA RET+1
     PUSH
     LDA RET
     PUSH
-    LDA RESULT       ; Retorna o resultado no acumulador
+    LDA RESULT       ; Returns the result in the accumulator
     RET
 
-RET:    DW 0         ; Endereço de retorno salvo pela sub-rotina
-PARAM:  DB 0         ; 
+RET:    DW 0         ; Return address saved by the subroutine
+PARAM:  DB 0
 RESULT: DB 0
 
 END 0
