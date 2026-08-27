@@ -421,21 +421,47 @@ END
 Demonstrates the use of JSR, RET, and PUSH/POP:
 
 ```assembly
-; Subroutine
+; Passagem de parâmetro pela pilha
+; Resultado retornado no acumulador
+
 ORG 0
-    LDA #42
-    JSR SAVE      ; Call subroutine
-    OUT 0         ; Show result
+    LDA #42          ; Parâmetro da sub-rotina
+    PUSH             ; Empilha o parâmetro
+    JSR DOBRO        ; JSR empilha o endereço de retorno
+    OUT 0            ; Mostra o resultado: 84
     HLT
 
-SAVE:
-    PUSH          ; Save AC
-    LDA #99
-    OUT 0         ; Show 99
-    POP           ; Restore AC (42)
-    RET
-END
+DOBRO:
+    ; Ao entrar na sub-rotina, o topo da pilha contém
+    ; o endereço de retorno colocado por JSR.
+    ; Abaixo dele está o parâmetro empilhado pelo programa principal.
 
+    POP              ; Byte baixo do endereço de retorno
+    STA RET
+    POP              ; Byte alto do endereço de retorno
+    STA RET+1
+    POP              ; Recupera o parâmetro
+    STA PARAM
+    ; Calcula PARAM * 2
+    LDA PARAM
+    ADD PARAM
+    STA RESULT
+
+    ; Restaura o endereço de retorno.
+    ; RET desempilha primeiro o byte baixo e depois o byte alto.
+    ; Como PUSH empilha e decrementa SP, empilhamos primeiro o byte alto.
+    LDA RET+1
+    PUSH
+    LDA RET
+    PUSH
+    LDA RESULT       ; Retorna o resultado no acumulador
+    RET
+
+RET:    DW 0         ; Endereço de retorno salvo pela sub-rotina
+PARAM:  DB 0         ; 
+RESULT: DB 0
+
+END 0
 ```
 
 ---
