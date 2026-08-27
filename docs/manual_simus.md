@@ -388,6 +388,7 @@ Programa que aguarda entrada do usuário e ecoa o valor:
 ORG 0
 LOOP:
     IN 1          ; Lê status
+    OR #0         ; Operação para setar o carry
     JZ LOOP       ; Aguarda dado
     IN 0          ; Lê valor
     OUT 0         ; Exibe valor
@@ -402,37 +403,69 @@ Conta de 0 a 9 e para:
 ```assembly
 ; Contador
 ORG 0
-    LDA #0        ; Inicia em 0
 LOOP:
+    LDA CONT      ; Carrega o valor do contador
     OUT 0         ; Mostra valor
-    ADD #1        ; Incrementa
+    ADD #1        ; Incrementa 
+    STA CONT      ; Armazena o novo valor
     SUB #10       ; Compara com 10
     JNZ LOOP      ; Continua se != 10
     HLT
 END
+CONT:   DB 0;
 ```
 
 ### 9.3. Sub-rotina com Pilha
 
-Demonstra uso de JSR, RET e PUSH/POP:
+Demonstra passagem de parâmetro pela pilha. O programa principal empilha o
+parâmetro antes de chamar a sub-rotina. Como `JSR` também empilha o endereço de
+retorno, a sub-rotina primeiro salva esse endereço em uma variável `DW`, depois
+retira o parâmetro, calcula o resultado e restaura o endereço de retorno para
+que `RET` funcione corretamente.
 
 ```assembly
-; Sub-rotina
+; Passagem de parâmetro pela pilha
+; Resultado retornado no acumulador
+
 ORG 0
-    LDA #42
-    JSR SALVAR    ; Chama sub-rotina
-    OUT 0         ; Mostra resultado
+    LDA #42          ; Parâmetro da sub-rotina
+    PUSH             ; Empilha o parâmetro
+    JSR DOBRO        ; JSR empilha o endereço de retorno
+    OUT 0            ; Mostra o resultado: 84
     HLT
 
-SALVAR:
-    PUSH          ; Salva AC
-    LDA #99
-    OUT 0         ; Mostra 99
-    POP           ; Restaura AC (42)
-    RET
-END
-```
+DOBRO:
+    ; Ao entrar na sub-rotina, o topo da pilha contém
+    ; o endereço de retorno colocado por JSR.
+    ; Abaixo dele está o parâmetro empilhado pelo programa principal.
 
+    POP              ; Byte baixo do endereço de retorno
+    STA RET
+    POP              ; Byte alto do endereço de retorno
+    STA RET+1
+    POP              ; Recupera o parâmetro
+    STA PARAM
+    ; Calcula PARAM * 2
+    LDA PARAM
+    ADD PARAM
+    STA RESULT
+
+    ; Restaura o endereço de retorno.
+    ; RET desempilha primeiro o byte baixo e depois o byte alto.
+    ; Como PUSH empilha e decrementa SP, empilhamos primeiro o byte alto.
+    LDA RET+1
+    PUSH
+    LDA RET
+    PUSH
+    LDA RESULT       ; Retorna o resultado no acumulador
+    RET
+
+RET:    DW 0         ; Endereço de retorno salvo pela sub-rotina
+PARAM:  DB 0         ; 
+RESULT: DB 0
+
+END 0
+```
 ---
 
 ### 9.4. Display Gráfico Virtual
