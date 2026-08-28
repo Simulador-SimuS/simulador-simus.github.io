@@ -480,36 +480,26 @@ MAIN:
     TRAP VIDEO_CONFIG
     OR #0
     JNZ ERRO
-
     LDA #21
     TRAP LIMPAR
-
     LDA #24
     TRAP RETANGULO
-
     LDA #23
     TRAP RETA
-
     LDA #25
     TRAP CIRCULO
-
     HLT
-
 ERRO:
     HLT
 
 VIDEO_CONFIG:
     DW VIDEO_BASE
-
 LIMPAR:
     DB 3              ; azul
-
 RETANGULO:
     DB 48, 16, 32, 32, 224, 1
-
 RETA:
     DB 0, 63, 127, 0, 28
-
 CIRCULO:
     DB 64, 32, 18, 252, 0
 
