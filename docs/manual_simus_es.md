@@ -92,7 +92,7 @@ Tres indicadores visuales que muestran el estado de los flags del procesador:
 
 Interfaz simulada de periféricos con cuatro componentes:
 
-- **Banner - Texto:** Pantalla de texto ancha que muestra caracteres ASCII enviados por la instrucción OUT 3. Soporta múltiples líneas y texto bidireccional. Ejemplo: *"Sapiens 2.0"*.
+- **Banner - Texto:** Pantalla de texto ancha que muestra caracteres ASCII enviados por la instrucción OUT 2. Soporta múltiples líneas y texto bidireccional. Ejemplo: *"Sapiens 2.0"*.
 - **Entrada (IN) - Hex/Bin:** Campo de texto donde el usuario escribe valores hexadecimales (00-FF) o binarios (8 bits) que serán leídos por la instrucción IN 0. Presione ENTER después de escribir para confirmar el valor. Un LED verde se enciende cuando hay datos disponibles.
 - **Salida (OUT) - Hex/Bin:** Pantalla hexadecimal/binaria que muestra el último valor enviado por la instrucción OUT 0. Formato: XX o XXXXXXXX.
 - **LED de Estado:** Indicador verde que se enciende cuando hay un dato escrito y confirmado en la entrada, disponible para su lectura a través de IN 1 (puerto de estado).
@@ -239,8 +239,8 @@ El procesador Sapiens implementa las siguientes categorías de instrucciones:
 | IN 0 | Lee el valor hexadecimal escrito por el usuario |
 | IN 1 | Lee el estado de la entrada (1 = dato disponible, 0 = sin dato) |
 | OUT 0 | Envía el AC a la pantalla hexadecimal de salida |
-| OUT 2 | Limpia el banner de texto |
-| OUT 3 | Envía un carácter ASCII al banner de texto (lo añade al final) |
+| OUT 2 | Envía un carácter ASCII al banner de texto (lo añade al final) | 
+| OUT 3 | Limpia el banner de texto |
 
 ### 5.9. Instrucciones Especiales
 
