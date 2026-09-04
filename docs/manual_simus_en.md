@@ -92,7 +92,7 @@ Three visual indicators showing the state of the processor flags:
 
 Simulated peripheral interface with four components:
 
-- **Banner - Text:** A wide text display that shows ASCII characters sent by the OUT 3 instruction. It supports multiple lines and bidirectional text. Example: *"Sapiens 2.0"*.
+- **Banner - Text:** A wide text display that shows ASCII characters sent by the OUT 2 instruction. It supports multiple lines and bidirectional text. Example: *"Sapiens 2.0"*.
 - **Input (IN) - Hex/Bin:** A text field where the user types hexadecimal (00-FF) or binary (8-bit) values to be read by the IN 0 instruction. Press ENTER after typing to confirm the value. A green LED lights up when data is available.
 - **Output (OUT) - Hex/Bin:** A hexadecimal/binary display showing the last value sent by the OUT 0 instruction. Format: XX or XXXXXXXX.
 - **Status LED:** A green indicator that lights up when data is entered and confirmed in the input, making it available for reading via IN 1 (status port).
@@ -246,8 +246,8 @@ The Sapiens processor implements the following categories of instructions:
 | IN 0 | Reads the hexadecimal value typed by the user |
 | IN 1 | Reads input status (1 = data available, 0 = no data) |
 | OUT 0 | Sends AC to the hexadecimal output display |
-| OUT 2 | Clears the text banner |
-| OUT 3 | Sends an ASCII character to the text banner (appends to the end) |
+| OUT 2 | Sends an ASCII character to the text banner (appends to the end) | 
+| OUT 3 |  Clears the text banner |
 
 ### 5.9. Special Instructions
 
