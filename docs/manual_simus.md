@@ -66,7 +66,7 @@ Cinco botões com cores distintas para controlar a execução:
 
 #### 2.2.2. Barra de Status
 
-Exibe o estado atual do simulador em texto cinza, abaixo dos botões de controle. Mensagens incluem: *"Pronto"*, *"Executando..."*, *"TURBO - Executando..."*, *"HALT - Programa Finalizado"*, entre outras.
+Exibe o estado atual do simulador em texto cinza, abaixo dos botões de controle. Mensagens incluem: *"Pronto"*, *"Executando..."*, *"TURBO - Executando..."*, *"HALT - Programa Finalizado"*, entre ras.
 
 #### 2.2.3. Registradores
 
@@ -92,7 +92,7 @@ Três indicadores visuais que mostram o estado dos flags do processador:
 
 Interface simulada de periféricos com quatro componentes:
 
-- **Banner - Texto:** *Display* de texto largo que exibe caracteres ASCII enviados pela instrução `OUT 3`. Suporta múltiplas linhas e texto bidirecional. Exemplo: *"Sapiens 2.0"*.
+- **Banner - Texto:** *Display* de texto largo que exibe caracteres ASCII enviados pela instrução `OUT 2`. Suporta múltiplas linhas e texto bidirecional. Exemplo: *"Sapiens 2.0"*.
 - **Entrada (IN) - Hex/Bin:** Campo de texto onde o usuário digita valores hexadecimais (00-FF) ou binários (8 bits) que serão lidos pela instrução `IN 0`. Pressione `ENTER` após digitar para confirmar o valor. Um LED verde acende quando há dado disponível.
 - **Saída (OUT) - Hex/Bin:** Display hexadecimal/binário que mostra o último valor enviado pela instrução `OUT 0`. Formato: XX ou XXXXXXXX.
 - **LED de Status:** Indicador verde que acende quando há dado digitado e confirmado na entrada, disponível para leitura via `IN 1` (porta de *status*).
@@ -246,8 +246,8 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | IN 0 | Lê valor hexadecimal digitado pelo usuário |
 | IN 1 | Lê status da entrada (1 = dado disponível, 0 = sem dado) |
 | OUT 0 | Envia AC para display hexadecimal de saída |
-| OUT 2 | Limpa o banner de texto |
-| OUT 3 | Envia caractere ASCII para banner de texto (adiciona ao final) |
+| OUT 2 | Envia caractere ASCII para banner de texto (adiciona ao final) |  
+| OUT 3 | Limpa o banner de texto |
 
 ### 5.9. Instruções Especiais
 
@@ -256,7 +256,6 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | NOP | No Operation | Não faz nada (pode ser usado para timing) |
 | HLT | Halt | Para a execução do processador |
 | TRAP | Trap | Gera chamada de serviço |
-
 
 #### Operações de TRAP Disponíveis:
 
