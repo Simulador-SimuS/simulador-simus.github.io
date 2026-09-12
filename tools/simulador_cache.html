@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cache</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-tertiary {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(237, 137, 54, 0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .visualization {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-panel {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .history-panel h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .history-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            border-left: 4px solid #ddd;
+        }
+
+        .history-item.hit {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .history-item.miss {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .step-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .step-info h3 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .address-breakdown {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .address-breakdown h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .address-field {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .tag-field {
+            background: #e1bee7;
+            color: #4a148c;
+        }
+
+        .index-field {
+            background: #b2ebf2;
+            color: #006064;
+        }
+
+        .offset-field {
+            background: #ffccbc;
+            color: #bf360c;
+        }
+
+        .cache-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cache-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .cache-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: monospace;
+        }
+
+        .cache-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .cache-table tr.highlight-hit {
+            background: #c8e6c9 !important;
+            animation: pulse 0.5s;
+        }
+
+        .cache-table tr.highlight-miss {
+            background: #ffcdd2 !important;
+            animation: shake 0.5s;
+        }
+
+        .valid-bit {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .valid-bit.valid {
+            background: #4caf50;
+            color: white;
+        }
+
+        .valid-bit.invalid {
+            background: #ccc;
+            color: #666;
+        }
+
+        .dirty-bit {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .dirty-bit.dirty {
+            background: #ff9800;
+            color: white;
+        }
+
+        .dirty-bit.clean {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .info-box h4 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .config-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .config-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .config-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .config-value {
+            color: #333;
+            font-family: monospace;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .history-panel {
+                width: 100%;
+                max-height: 400px;
+            }
+        }
+    
+        .language-switch { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+        .language-switch button { padding: 8px 12px; border: 1px solid #b6c4d8; border-radius: 999px; background: #eef2f8; color: #172033; font: 650 .9rem system-ui, sans-serif; cursor: pointer; }
+        .language-switch button.active { background: #1d4ed8; color: white; border-color: #1d4ed8; }
+        .language-switch button:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+        .language-switch button { text-transform: none; letter-spacing: normal; }
+        .control-group { min-width: 0; }
+        .control-group input, .control-group select, .control-group textarea { width: 100%; }
+        #cacheVisualization { max-width: 100%; overflow-x: auto; }
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .container { padding: 16px; }
+            .controls { grid-template-columns: minmax(0, 1fr); }
+            .controls .control-group { grid-column: auto !important; }
+            .visualization { width: 100%; }
+        }
+        @media print { .language-switch { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="language-switch" role="group" aria-label="Idioma">
+        <button type="button" data-lang="pt" lang="pt-BR" aria-pressed="true" class="active">🇧🇷 Português</button>
+        <button type="button" data-lang="es" lang="es" aria-pressed="false">🇪🇸 Español</button>
+        <button type="button" data-lang="en" lang="en" aria-pressed="false">🇺🇸 English</button>
+      </div>
+
+        <h1>💾 Simulador de Cache</h1>
+        <p class="subtitle">Visualize o funcionamento de diferentes tipos de mapeamento e políticas de substituição</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="cacheSize">Linhas da Cache:</label>
+                <input type="number" id="cacheSize" value="8" min="2" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="blockSize">Tamanho do Bloco (palavras):</label>
+                <input type="number" id="blockSize" value="4" min="1" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="addressBits">Bits de Endereço:</label>
+                <input type="number" id="addressBits" value="8" min="6" max="16">
+            </div>
+
+            <div class="control-group">
+                <label for="mappingType">Tipo de Mapeamento:</label>
+                <select id="mappingType">
+                    <option value="direct">Mapeamento Direto</option>
+                    <option value="associative">Completamente Associativo</option>
+                    <option value="set-2">Associativo por Conjunto (2 vias)</option>
+                    <option value="set-4">Associativo por Conjunto (4 vias)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="replacementPolicy">Política de Substituição:</label>
+                <select id="replacementPolicy">
+                    <option value="fifo">FIFO (First In, First Out)</option>
+                    <option value="lru">LRU (Least Recently Used)</option>
+                    <option value="random">Aleatória</option>
+                </select>
+            </div>
+
+            <div class="control-group" style="grid-column: span 2;">
+                <label for="addressSequence">Sequência de Endereços (decimal ou hex 0x...):</label>
+                <textarea id="addressSequence" rows="3" placeholder="Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...">0, 4, 8, 12, 16, 20, 24, 0, 4, 8, 28, 32, 0, 16</textarea>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-primary" onclick="startSimulation()">▶ Iniciar Simulação</button>
+            <button class="btn-secondary" onclick="previousStep()">⏮ Anterior</button>
+            <button class="btn-secondary" onclick="nextStep()">Próximo ⏭</button>
+            <button class="btn-tertiary" onclick="autoPlay()">⏯ Auto</button>
+            <button class="btn-tertiary" onclick="resetSimulation()">🔄 Resetar</button>
+        </div>
+
+        <div id="configInfo"></div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Acessos Totais</div>
+                <div class="stat-value" id="totalAccess">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cache Hits</div>
+                <div class="stat-value" id="cacheHits">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cache Misses</div>
+                <div class="stat-value" id="cacheMisses">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Taxa de Acerto</div>
+                <div class="stat-value" id="hitRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Write-backs</div>
+                <div class="stat-value" id="writebacks">0</div>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent" style="display: none;">
+            <div class="visualization">
+                <div class="step-info" id="stepInfo"></div>
+                <div class="address-breakdown" id="addressBreakdown"></div>
+                <div id="cacheVisualization"></div>
+            </div>
+
+            <div class="history-panel">
+                <h3>📜 Histórico de Acessos</h3>
+                <div id="stepCounter" style="margin-bottom: 10px; font-weight: bold; color: #667eea;"></div>
+                <div id="history"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Each file remains self-contained and works offline.
+        const translations = {
+  "FIFO (First In, First Out)": {
+    "pt": "FIFO (First In, First Out)",
+    "en": "FIFO (First In, First Out)",
+    "es": "FIFO (primero en entrar, primero en salir)"
+  },
+  "LRU (Least Recently Used)": {
+    "pt": "LRU (Least Recently Used)",
+    "en": "LRU (Least Recently Used)",
+    "es": "LRU (menos recientemente utilizado)"
+  },
+  "Simulador de Cache": {
+    "pt": "Simulador de Cache",
+    "en": "Cache Simulator",
+    "es": "Simulador de caché"
+  },
+  "💾 Simulador de Cache": {
+    "pt": "💾 Simulador de Cache",
+    "en": "💾 Cache Simulator",
+    "es": "💾 Simulador de caché"
+  },
+  "Visualize o funcionamento de diferentes tipos de mapeamento e políticas de substituição": {
+    "pt": "Visualize o funcionamento de diferentes tipos de mapeamento e políticas de substituição",
+    "en": "Explore how different mapping types and replacement policies work",
+    "es": "Visualiza el funcionamiento de distintos tipos de correspondencia y políticas de reemplazo"
+  },
+  "Linhas da Cache:": {
+    "pt": "Linhas da Cache:",
+    "en": "Cache lines:",
+    "es": "Líneas de caché:"
+  },
+  "Tamanho do Bloco (palavras):": {
+    "pt": "Tamanho do Bloco (palavras):",
+    "en": "Block size (words):",
+    "es": "Tamaño del bloque (palabras):"
+  },
+  "Bits de Endereço:": {
+    "pt": "Bits de Endereço:",
+    "en": "Address bits:",
+    "es": "Bits de dirección:"
+  },
+  "Tipo de Mapeamento:": {
+    "pt": "Tipo de Mapeamento:",
+    "en": "Mapping type:",
+    "es": "Tipo de correspondencia:"
+  },
+  "Mapeamento Direto": {
+    "pt": "Mapeamento Direto",
+    "en": "Direct mapped",
+    "es": "Correspondencia directa"
+  },
+  "Completamente Associativo": {
+    "pt": "Completamente Associativo",
+    "en": "Fully associative",
+    "es": "Totalmente asociativa"
+  },
+  "Associativo por Conjunto (2 vias)": {
+    "pt": "Associativo por Conjunto (2 vias)",
+    "en": "2-way set associative",
+    "es": "Asociativa por conjuntos (2 vías)"
+  },
+  "Associativo por Conjunto (4 vias)": {
+    "pt": "Associativo por Conjunto (4 vias)",
+    "en": "4-way set associative",
+    "es": "Asociativa por conjuntos (4 vías)"
+  },
+  "Política de Substituição:": {
+    "pt": "Política de Substituição:",
+    "en": "Replacement policy:",
+    "es": "Política de reemplazo:"
+  },
+  "Aleatória": {
+    "pt": "Aleatória",
+    "en": "Random",
+    "es": "Aleatoria"
+  },
+  "Sequência de Endereços (decimal ou hex 0x...):": {
+    "pt": "Sequência de Endereços (decimal ou hex 0x...):",
+    "en": "Address sequence (decimal or hex 0x...):",
+    "es": "Secuencia de direcciones (decimal o hex 0x...):"
+  },
+  "Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...": {
+    "pt": "Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...",
+    "en": "E.g.: 0, 4, 8, 12, 16, 0, 4 or 0x00, 0x04, 0x08...",
+    "es": "Ej.: 0, 4, 8, 12, 16, 0, 4 o 0x00, 0x04, 0x08..."
+  },
+  "▶ Iniciar Simulação": {
+    "pt": "▶ Iniciar Simulação",
+    "en": "▶ Start simulation",
+    "es": "▶ Iniciar simulación"
+  },
+  "⏮ Anterior": {
+    "pt": "⏮ Anterior",
+    "en": "⏮ Previous",
+    "es": "⏮ Anterior"
+  },
+  "Próximo ⏭": {
+    "pt": "Próximo ⏭",
+    "en": "Next ⏭",
+    "es": "Siguiente ⏭"
+  },
+  "⏯ Auto": {
+    "pt": "⏯ Auto",
+    "en": "⏯ Auto",
+    "es": "⏯ Auto"
+  },
+  "🔄 Resetar": {
+    "pt": "🔄 Resetar",
+    "en": "🔄 Reset",
+    "es": "🔄 Reiniciar"
+  },
+  "Acessos Totais": {
+    "pt": "Acessos Totais",
+    "en": "Total accesses",
+    "es": "Accesos totales"
+  },
+  "Cache Hits": {
+    "pt": "Cache Hits",
+    "en": "Cache hits",
+    "es": "Aciertos de caché"
+  },
+  "Cache Misses": {
+    "pt": "Cache Misses",
+    "en": "Cache misses",
+    "es": "Fallos de caché"
+  },
+  "Taxa de Acerto": {
+    "pt": "Taxa de Acerto",
+    "en": "Hit rate",
+    "es": "Tasa de aciertos"
+  },
+  "Write-backs": {
+    "pt": "Write-backs",
+    "en": "Write-backs",
+    "es": "Escrituras diferidas"
+  },
+  "📜 Histórico de Acessos": {
+    "pt": "📜 Histórico de Acessos",
+    "en": "📜 Access history",
+    "es": "📜 Historial de accesos"
+  },
+  "Por favor, insira uma sequência válida de endereços!": {
+    "pt": "Por favor, insira uma sequência válida de endereços!",
+    "en": "Please enter a valid address sequence!",
+    "es": "¡Introduce una secuencia válida de direcciones!"
+  },
+  "⚙️ Configuração da Cache": {
+    "pt": "⚙️ Configuração da Cache",
+    "en": "⚙️ Cache configuration",
+    "es": "⚙️ Configuración de la caché"
+  },
+  "Linhas totais:": {
+    "pt": "Linhas totais:",
+    "en": "Total lines:",
+    "es": "Líneas totales:"
+  },
+  "Conjuntos:": {
+    "pt": "Conjuntos:",
+    "en": "Sets:",
+    "es": "Conjuntos:"
+  },
+  "Associatividade:": {
+    "pt": "Associatividade:",
+    "en": "Associativity:",
+    "es": "Asociatividad:"
+  },
+  "Tamanho do bloco:": {
+    "pt": "Tamanho do bloco:",
+    "en": "Block size:",
+    "es": "Tamaño del bloque:"
+  },
+  "Bits de Tag:": {
+    "pt": "Bits de Tag:",
+    "en": "Tag bits:",
+    "es": "Bits de etiqueta:"
+  },
+  "Bits de Índice:": {
+    "pt": "Bits de Índice:",
+    "en": "Index bits:",
+    "es": "Bits de índice:"
+  },
+  "Bits de Offset:": {
+    "pt": "Bits de Offset:",
+    "en": "Offset bits:",
+    "es": "Bits de desplazamiento:"
+  },
+  "{0} via(s)": {
+    "pt": "{0} via(s)",
+    "en": "{0} way(s)",
+    "es": "{0} vía(s)"
+  },
+  "{0} palavras": {
+    "pt": "{0} palavras",
+    "en": "{0} words",
+    "es": "{0} palabras"
+  },
+  "Passo: {0} / {1}": {
+    "pt": "Passo: {0} / {1}",
+    "en": "Step: {0} / {1}",
+    "es": "Paso: {0} / {1}"
+  },
+  "Passo {0}: Acesso ao endereço {1} (0x{2})": {
+    "pt": "Passo {0}: Acesso ao endereço {1} (0x{2})",
+    "en": "Step {0}: Access address {1} (0x{2})",
+    "es": "Paso {0}: Acceso a la dirección {1} (0x{2})"
+  },
+  "Dados encontrados na cache!": {
+    "pt": "Dados encontrados na cache!",
+    "en": "Data found in the cache!",
+    "es": "¡Datos encontrados en la caché!"
+  },
+  "Bloco carregado da memória principal na linha {0}": {
+    "pt": "Bloco carregado da memória principal na linha {0}",
+    "en": "Block loaded from main memory into line {0}",
+    "es": "Bloque cargado desde la memoria principal en la línea {0}"
+  },
+  "⚠️ Write-back necessário (bloco sujo)": {
+    "pt": "⚠️ Write-back necessário (bloco sujo)",
+    "en": "⚠️ Write-back required (dirty block)",
+    "es": "⚠️ Escritura diferida necesaria (bloque modificado)"
+  },
+  "✓ CACHE HIT": {
+    "pt": "✓ CACHE HIT",
+    "en": "✓ CACHE HIT",
+    "es": "✓ ACIERTO DE CACHÉ"
+  },
+  "✗ CACHE MISS": {
+    "pt": "✗ CACHE MISS",
+    "en": "✗ CACHE MISS",
+    "es": "✗ FALLO DE CACHÉ"
+  },
+  "🔍 Decomposição do Endereço": {
+    "pt": "🔍 Decomposição do Endereço",
+    "en": "🔍 Address breakdown",
+    "es": "🔍 Descomposición de la dirección"
+  },
+  "Endereço:": {
+    "pt": "Endereço:",
+    "en": "Address:",
+    "es": "Dirección:"
+  },
+  "Índice: {0}": {
+    "pt": "Índice: {0}",
+    "en": "Index: {0}",
+    "es": "Índice: {0}"
+  },
+  "Tag: {0}": {
+    "pt": "Tag: {0}",
+    "en": "Tag: {0}",
+    "es": "Etiqueta: {0}"
+  },
+  "Offset: {0}": {
+    "pt": "Offset: {0}",
+    "en": "Offset: {0}",
+    "es": "Desplazamiento: {0}"
+  },
+  "<th>Conjunto</th>": {
+    "pt": "<th>Conjunto</th>",
+    "en": "<th>Set</th>",
+    "es": "<th>Conjunto</th>"
+  },
+  "<th>Linha</th>": {
+    "pt": "<th>Linha</th>",
+    "en": "<th>Line</th>",
+    "es": "<th>Línea</th>"
+  },
+  "<th>Válido</th>": {
+    "pt": "<th>Válido</th>",
+    "en": "<th>Valid</th>",
+    "es": "<th>Válido</th>"
+  },
+  "<th>Sujo</th>": {
+    "pt": "<th>Sujo</th>",
+    "en": "<th>Dirty</th>",
+    "es": "<th>Modificado</th>"
+  },
+  "<th>Tag</th>": {
+    "pt": "<th>Tag</th>",
+    "en": "<th>Tag</th>",
+    "es": "<th>Etiqueta</th>"
+  },
+  "<th>Dados</th>": {
+    "pt": "<th>Dados</th>",
+    "en": "<th>Data</th>",
+    "es": "<th>Datos</th>"
+  },
+  "<th>Último Uso</th>": {
+    "pt": "<th>Último Uso</th>",
+    "en": "<th>Last used</th>",
+    "es": "<th>Último uso</th>"
+  },
+  "<th>Tempo Carga</th>": {
+    "pt": "<th>Tempo Carga</th>",
+    "en": "<th>Load time</th>",
+    "es": "<th>Momento de carga</th>"
+  },
+  "Passo {0}:": {
+    "pt": "Passo {0}:",
+    "en": "Step {0}:",
+    "es": "Paso {0}:"
+  },
+  "<span style=\"color: #28a745;\">HIT</span>": {
+    "pt": "<span style=\"color: #28a745;\">HIT</span>",
+    "en": "<span style=\"color: #28a745;\">HIT</span>",
+    "es": "<span style=\"color: #28a745;\">ACIERTO</span>"
+  },
+  "<span style=\"color: #dc3545;\">MISS</span>": {
+    "pt": "<span style=\"color: #dc3545;\">MISS</span>",
+    "en": "<span style=\"color: #dc3545;\">MISS</span>",
+    "es": "<span style=\"color: #dc3545;\">FALLO</span>"
+  },
+  "Idioma": {
+    "pt": "Idioma",
+    "en": "Language",
+    "es": "Idioma"
+  }
+};
+        let lang = 'pt';
+        const locale = () => ({pt: 'pt-BR', en: 'en-US', es: 'es-ES'}[lang]);
+        function t(key, ...values) {
+            return translations[key][lang].replace(/\{(\d+)\}/g, (_, index) => values[Number(index)]);
+        }
+        // Retain the original text nodes so switching languages preserves inputs and listeners.
+        const localizedText = [];
+        const walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.parentElement.closest('script, style, [data-lang]')) continue;
+            const key = node.nodeValue.trim().replace(/\s+/g, ' ');
+            if (Object.hasOwn(translations, key)) localizedText.push({node, key, prefix: node.nodeValue.match(/^\s*/)[0], suffix: node.nodeValue.match(/\s*$/)[0]});
+        }
+        const localizedAttributes = [];
+        document.querySelectorAll('[placeholder], [aria-label], [title]').forEach(element => {
+            ['placeholder', 'aria-label', 'title'].forEach(attribute => {
+                const key = element.getAttribute(attribute);
+                if (Object.hasOwn(translations, key)) localizedAttributes.push({element, attribute, key});
+            });
+        });
+        function setLanguage(value) {
+            if (!['pt', 'en', 'es'].includes(value)) return;
+            lang = value;
+            document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
+            localizedText.forEach(({node, key, prefix, suffix}) => { node.nodeValue = prefix + t(key) + suffix; });
+            localizedAttributes.forEach(({element, attribute, key}) => element.setAttribute(attribute, t(key)));
+            document.querySelectorAll('[data-lang]').forEach(button => {
+                const active = button.dataset.lang === lang;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', String(active));
+            });
+            displayConfigInfo();
+            if (simulation.history.length) showStep(simulation.currentStep);
+        }
+        document.querySelectorAll('[data-lang]').forEach(button => {
+            button.addEventListener('click', () => setLanguage(button.dataset.lang));
+        });
+
+        let simulation = {
+            cache: [],
+            history: [],
+            currentStep: -1,
+            hits: 0,
+            misses: 0,
+            writebacks: 0,
+            config: {},
+            autoPlayInterval: null
+        };
+
+        function parseAddress(addr) {
+            if (typeof addr === 'string') {
+                addr = addr.trim();
+                if (addr.startsWith('0x') || addr.startsWith('0X')) {
+                    return parseInt(addr, 16);
+                }
+            }
+            return parseInt(addr);
+        }
+
+        function calculateCacheConfig() {
+            const cacheSize = parseInt(document.getElementById('cacheSize').value);
+            const blockSize = parseInt(document.getElementById('blockSize').value);
+            const addressBits = parseInt(document.getElementById('addressBits').value);
+            const mappingType = document.getElementById('mappingType').value;
+
+            let config = {
+                cacheSize: cacheSize,
+                blockSize: blockSize,
+                addressBits: addressBits,
+                mappingType: mappingType,
+                offsetBits: Math.log2(blockSize),
+                sets: 0,
+                associativity: 0,
+                indexBits: 0,
+                tagBits: 0
+            };
+
+            switch(mappingType) {
+                case 'direct':
+                    config.sets = cacheSize;
+                    config.associativity = 1;
+                    config.indexBits = Math.log2(cacheSize);
+                    break;
+                case 'associative':
+                    config.sets = 1;
+                    config.associativity = cacheSize;
+                    config.indexBits = 0;
+                    break;
+                case 'set-2':
+                    config.sets = cacheSize / 2;
+                    config.associativity = 2;
+                    config.indexBits = Math.log2(config.sets);
+                    break;
+                case 'set-4':
+                    config.sets = cacheSize / 4;
+                    config.associativity = 4;
+                    config.indexBits = Math.log2(config.sets);
+                    break;
+            }
+
+            config.tagBits = addressBits - config.indexBits - config.offsetBits;
+
+            return config;
+        }
+
+        function displayConfigInfo() {
+            const config = calculateCacheConfig();
+            
+            let html = `
+                <div class="info-box">
+                    <h4>${t("⚙️ Configuração da Cache")}</h4>
+                    <div class="config-summary">
+                        <div class="config-item">
+                            <span class="config-label">${t("Linhas totais:")}</span>
+                            <span class="config-value">${config.cacheSize}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Conjuntos:")}</span>
+                            <span class="config-value">${config.sets}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Associatividade:")}</span>
+                            <span class="config-value">${t("{0} via(s)", config.associativity)}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Tamanho do bloco:")}</span>
+                            <span class="config-value">${t("{0} palavras", config.blockSize)}</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Bits de Tag:")}</span>
+                            <span class="config-value">${config.tagBits} bits</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Bits de Índice:")}</span>
+                            <span class="config-value">${config.indexBits} bits</span>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">${t("Bits de Offset:")}</span>
+                            <span class="config-value">${config.offsetBits} bits</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('configInfo').innerHTML = html;
+        }
+
+        function extractAddressFields(address, config) {
+            const offsetMask = (1 << config.offsetBits) - 1;
+            const indexMask = (1 << config.indexBits) - 1;
+            
+            const offset = address & offsetMask;
+            const index = (address >> config.offsetBits) & indexMask;
+            const tag = address >> (config.offsetBits + config.indexBits);
+
+            return { tag, index, offset };
+        }
+
+        function initializeCache(config) {
+            let cache = [];
+            
+            for (let i = 0; i < config.sets; i++) {
+                let set = [];
+                for (let j = 0; j < config.associativity; j++) {
+                    set.push({
+                        valid: false,
+                        dirty: false,
+                        tag: null,
+                        data: null,
+                        lastUsed: 0,
+                        loadTime: 0,
+                        fifoIndex: j
+                    });
+                }
+                cache.push(set);
+            }
+            
+            return cache;
+        }
+
+        function startSimulation() {
+            const addressSeqText = document.getElementById('addressSequence').value;
+            const replacementPolicy = document.getElementById('replacementPolicy').value;
+            
+            const addresses = addressSeqText.split(',')
+                .map(addr => parseAddress(addr))
+                .filter(addr => !isNaN(addr));
+
+            if (addresses.length === 0) {
+                alert(t("Por favor, insira uma sequência válida de endereços!"));
+                return;
+            }
+
+            const config = calculateCacheConfig();
+            simulation.config = config;
+            simulation.cache = initializeCache(config);
+            simulation.history = [];
+            simulation.currentStep = -1;
+            simulation.hits = 0;
+            simulation.misses = 0;
+            simulation.writebacks = 0;
+
+            // Simulate all steps
+            let tempCache = JSON.parse(JSON.stringify(simulation.cache));
+            let time = 0;
+
+            addresses.forEach((address, stepNum) => {
+                const fields = extractAddressFields(address, config);
+                const set = tempCache[fields.index];
+                
+                let step = {
+                    stepNumber: stepNum + 1,
+                    address: address,
+                    fields: fields,
+                    isHit: false,
+                    replacedLine: null,
+                    writeBack: false,
+                    cacheBefore: JSON.parse(JSON.stringify(tempCache)),
+                    cacheAfter: null
+                };
+
+                // Check for hit
+                let hitLine = -1;
+                for (let i = 0; i < set.length; i++) {
+                    if (set[i].valid && set[i].tag === fields.tag) {
+                        hitLine = i;
+                        break;
+                    }
+                }
+
+                if (hitLine !== -1) {
+                    // HIT
+                    step.isHit = true;
+                    set[hitLine].lastUsed = time;
+                    // Simular escrita (50% de chance)
+                    if (Math.random() > 0.5) {
+                        set[hitLine].dirty = true;
+                    }
+                } else {
+                    // MISS
+                    simulation.misses++;
+                    
+                    // Find victim line
+                    let victimLine = -1;
+                    
+                    // First check for invalid line
+                    for (let i = 0; i < set.length; i++) {
+                        if (!set[i].valid) {
+                            victimLine = i;
+                            break;
+                        }
+                    }
+
+                    // If all valid, use replacement policy
+                    if (victimLine === -1) {
+                        switch(replacementPolicy) {
+                            case 'fifo':
+                                victimLine = findFIFOVictim(set);
+                                break;
+                            case 'lru':
+                                victimLine = findLRUVictim(set);
+                                break;
+                            case 'random':
+                                victimLine = Math.floor(Math.random() * set.length);
+                                break;
+                        }
+                    }
+
+                    // Check if need write-back
+                    if (set[victimLine].valid && set[victimLine].dirty) {
+                        step.writeBack = true;
+                        simulation.writebacks++;
+                    }
+
+                    step.replacedLine = victimLine;
+
+                    // Load new block
+                    set[victimLine] = {
+                        valid: true,
+                        dirty: Math.random() > 0.7, // 30% dirty on load (simulate write)
+                        tag: fields.tag,
+                        data: `0x${address.toString(16).toUpperCase().padStart(2, '0')}`,
+                        lastUsed: time,
+                        loadTime: time,
+                        fifoIndex: set[victimLine].fifoIndex
+                    };
+                }
+
+                step.cacheAfter = JSON.parse(JSON.stringify(tempCache));
+                simulation.history.push(step);
+                time++;
+            });
+
+            simulation.hits = simulation.history.filter(s => s.isHit).length;
+
+            document.getElementById('stats').style.display = 'grid';
+            document.getElementById('mainContent').style.display = 'flex';
+            
+            showStep(0);
+        }
+
+        function findFIFOVictim(set) {
+            let oldest = 0;
+            for (let i = 1; i < set.length; i++) {
+                if (set[i].loadTime < set[oldest].loadTime) {
+                    oldest = i;
+                }
+            }
+            return oldest;
+        }
+
+        function findLRUVictim(set) {
+            let lru = 0;
+            for (let i = 1; i < set.length; i++) {
+                if (set[i].lastUsed < set[lru].lastUsed) {
+                    lru = i;
+                }
+            }
+            return lru;
+        }
+
+        function showStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= simulation.history.length) return;
+            
+            simulation.currentStep = stepIndex;
+            const step = simulation.history[stepIndex];
+            const config = simulation.config;
+
+            // Update counter
+            document.getElementById('stepCounter').textContent = 
+                `${t("Passo: {0} / {1}", stepIndex + 1, simulation.history.length)}`;
+
+            // Update step info
+            let info = `<h3>${t("Passo {0}: Acesso ao endereço {1} (0x{2})", step.stepNumber, step.address, step.address.toString(16).toUpperCase())}</h3>`;
+            
+            if (step.isHit) {
+                info += `<p style="color: #4caf50; font-weight: bold; font-size: 1.1em;">${t("✓ CACHE HIT")}</p>`;
+                info += `<p>${t("Dados encontrados na cache!")}</p>`;
+            } else {
+                info += `<p style="color: #f44336; font-weight: bold; font-size: 1.1em;">${t("✗ CACHE MISS")}</p>`;
+                info += `<p>${t("Bloco carregado da memória principal na linha {0}", step.replacedLine)}</p>`;
+                if (step.writeBack) {
+                    info += `<p style="color: #ff9800;">${t("⚠️ Write-back necessário (bloco sujo)")}</p>`;
+                }
+            }
+
+            document.getElementById('stepInfo').innerHTML = info;
+
+            // Address breakdown
+            const fields = step.fields;
+            let breakdownHtml = `
+                <h4>${t("🔍 Decomposição do Endereço")}</h4>
+                <div style="margin-top: 10px;">
+                    <strong>${t("Endereço:")}</strong> ${step.address} (0x${step.address.toString(16).toUpperCase().padStart(Math.ceil(config.addressBits/4), '0')}) = 
+                    ${step.address.toString(2).padStart(config.addressBits, '0')}₂
+                </div>
+                <div style="margin-top: 10px;">
+            `;
+
+            if (config.tagBits > 0) {
+                breakdownHtml += `
+                    <div class="address-field tag-field">
+                        ${t("Tag: {0}", fields.tag)} (${fields.tag.toString(2).padStart(config.tagBits, '0')}₂)
+                    </div>
+                `;
+            }
+
+            if (config.indexBits > 0) {
+                breakdownHtml += `
+                    <div class="address-field index-field">
+                        ${t("Índice: {0}", fields.index)} (${fields.index.toString(2).padStart(config.indexBits, '0')}₂)
+                    </div>
+                `;
+            }
+
+            breakdownHtml += `
+                <div class="address-field offset-field">
+                    ${t("Offset: {0}", fields.offset)} (${fields.offset.toString(2).padStart(config.offsetBits, '0')}₂)
+                </div>
+            </div>
+            `;
+
+            document.getElementById('addressBreakdown').innerHTML = breakdownHtml;
+
+            // Cache visualization
+            renderCache(step.cacheAfter, step);
+
+            // Update statistics
+            const currentHits = simulation.history.slice(0, stepIndex + 1).filter(s => s.isHit).length;
+            const currentMisses = simulation.history.slice(0, stepIndex + 1).filter(s => !s.isHit).length;
+            const currentWritebacks = simulation.history.slice(0, stepIndex + 1).filter(s => s.writeBack).length;
+            const total = stepIndex + 1;
+
+            document.getElementById('totalAccess').textContent = total;
+            document.getElementById('cacheHits').textContent = currentHits;
+            document.getElementById('cacheMisses').textContent = currentMisses;
+            document.getElementById('hitRate').textContent = new Intl.NumberFormat(locale(), {style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1}).format(currentHits / total);
+            document.getElementById('writebacks').textContent = currentWritebacks;
+
+            // Update history
+            updateHistory();
+        }
+
+        function renderCache(cache, step) {
+            const config = simulation.config;
+            let html = '<table class="cache-table">';
+            
+            // Header
+            html += '<thead><tr>';
+            html += t("<th>Conjunto</th>");
+            html += t("<th>Linha</th>");
+            html += t("<th>Válido</th>");
+            html += t("<th>Sujo</th>");
+            html += t("<th>Tag</th>");
+            html += t("<th>Dados</th>");
+            
+            const policy = document.getElementById('replacementPolicy').value;
+            if (policy === 'lru') {
+                html += t("<th>Último Uso</th>");
+            } else if (policy === 'fifo') {
+                html += t("<th>Tempo Carga</th>");
+            }
+            
+            html += '</tr></thead><tbody>';
+
+            // Cache lines
+            cache.forEach((set, setIndex) => {
+                set.forEach((line, lineIndex) => {
+                    const rowClass = (step.fields.index === setIndex && 
+                                    lineIndex === step.replacedLine && !step.isHit) ? 'highlight-miss' :
+                                   (step.fields.index === setIndex && 
+                                    line.valid && line.tag === step.fields.tag && step.isHit) ? 'highlight-hit' : '';
+                    
+                    html += `<tr class="${rowClass}">`;
+                    
+                    if (lineIndex === 0) {
+                        html += `<td rowspan="${set.length}" style="background: #f0f0f0; font-weight: bold;">${setIndex}</td>`;
+                    }
+                    
+                    html += `<td>${lineIndex}</td>`;
+                    html += `<td><span class="valid-bit ${line.valid ? 'valid' : 'invalid'}">${line.valid ? '1' : '0'}</span></td>`;
+                    html += `<td><span class="dirty-bit ${line.dirty ? 'dirty' : 'clean'}">${line.dirty ? 'D' : '-'}</span></td>`;
+                    html += `<td>${line.valid ? line.tag : '-'}</td>`;
+                    html += `<td>${line.valid ? line.data : '-'}</td>`;
+                    
+                    if (policy === 'lru') {
+                        html += `<td>${line.valid ? line.lastUsed : '-'}</td>`;
+                    } else if (policy === 'fifo') {
+                        html += `<td>${line.valid ? line.loadTime : '-'}</td>`;
+                    }
+                    
+                    html += '</tr>';
+                });
+            });
+
+            html += '</tbody></table>';
+            
+            document.getElementById('cacheVisualization').innerHTML = html;
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = '';
+            
+            simulation.history.forEach((step, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'history-item ' + (step.isHit ? 'hit' : 'miss');
+                
+                let content = `<strong>${t("Passo {0}:", step.stepNumber)}</strong> 0x${step.address.toString(16).toUpperCase()} - `;
+                content += step.isHit ? 
+                    t("<span style=\"color: #28a745;\">HIT</span>") : 
+                    t("<span style=\"color: #dc3545;\">MISS</span>");
+                
+                if (!step.isHit && step.writeBack) {
+                    content += ' <span style="color: #ff9800;">⚠️WB</span>';
+                }
+                
+                itemDiv.innerHTML = content;
+                
+                if (index === simulation.currentStep) {
+                    itemDiv.style.background = '#fff3cd';
+                    itemDiv.style.fontWeight = 'bold';
+                }
+                
+                historyDiv.appendChild(itemDiv);
+            });
+            
+            const currentItem = historyDiv.children[simulation.currentStep];
+            if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function nextStep() {
+            if (simulation.currentStep < simulation.history.length - 1) {
+                showStep(simulation.currentStep + 1);
+            }
+        }
+
+        function previousStep() {
+            if (simulation.currentStep > 0) {
+                showStep(simulation.currentStep - 1);
+            }
+        }
+
+        function autoPlay() {
+            if (simulation.autoPlayInterval) {
+                clearInterval(simulation.autoPlayInterval);
+                simulation.autoPlayInterval = null;
+            } else {
+                simulation.autoPlayInterval = setInterval(() => {
+                    if (simulation.currentStep < simulation.history.length - 1) {
+                        nextStep();
+                    } else {
+                        clearInterval(simulation.autoPlayInterval);
+                        simulation.autoPlayInterval = null;
+                    }
+                }, 1500);
+            }
+        }
+
+        function resetSimulation() {
+            if (simulation.autoPlayInterval) {
+                clearInterval(simulation.autoPlayInterval);
+                simulation.autoPlayInterval = null;
+            }
+            
+            simulation = {
+                cache: [],
+                history: [],
+                currentStep: -1,
+                hits: 0,
+                misses: 0,
+                writebacks: 0,
+                config: {},
+                autoPlayInterval: null
+            };
+
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            displayConfigInfo();
+        }
+
+        // Event listeners
+        document.getElementById('cacheSize').addEventListener('change', displayConfigInfo);
+        document.getElementById('blockSize').addEventListener('change', displayConfigInfo);
+        document.getElementById('addressBits').addEventListener('change', displayConfigInfo);
+        document.getElementById('mappingType').addEventListener('change', displayConfigInfo);
+
+        // Initial config display
+        displayConfigInfo();
+    </script>
+</body>
+</html>
