@@ -1341,7 +1341,7 @@ END
                         if (this.n) this.pc = (mode > 1) ? val : addr;
                         break;
                     case OPS.JP:
-                        if (!this.n) this.pc = (mode > 1) ? val : addr;
+                        if (!this.n && !this.z) this.pc = (mode > 1) ? val : addr;
                         break;
                     case OPS.JZ:
                         if (this.z) this.pc = (mode > 1) ? val : addr;
@@ -1577,7 +1577,7 @@ END
                         const ioScreen = document.getElementById('io-out');
                         const bannerScreen = document.getElementById('banner-out');
                         if (val === 0) ioScreen.innerText = formatIoOut(this.ac);
-                        else if (val === 1) bannerScreen.innerText = "";
+                        // Porta 1 é somente de leitura (IN 1); OUT 1 não tem efeito.
                         else if (val === 2) {
                             let char = toChar(this.ac);
                             bannerScreen.innerText += char;
