@@ -84,9 +84,9 @@ Casilla con fondo oscuro que muestra el mnemónico de la instrucción a la que a
 
 Tres indicadores visuales que muestran el estado de los flags del procesador:
 
-- **N (Negativo):** Se enciende en azul cuando el resultado de la última operación es negativo (bit 7 = 1).
+- **N (Negativo):** Indica el bit de signo del último resultado que actualizó los flags: bit 7 en operaciones de 8 bits y bit 15 en `LDS`.
 - **Z (Cero):** Se enciende en azul cuando el resultado de la última operación es cero.
-- **C (Acarreo / Carry):** Se enciende en azul cuando hay un desbordamiento/acarreo en la última operación aritmética.
+- **C (Acarreo / Carry):** Indica acarreo en la suma, préstamo en la resta o el bit expulsado en un desplazamiento. Las instrucciones que no actualizan C conservan su valor anterior. C no es un flag de desbordamiento con signo.
 
 #### 2.2.6. Puertos de Entrada/Salida
 
@@ -164,6 +164,18 @@ Siga estos pasos para desarrollar y ejecutar programas en SimuS:
 
 El procesador Sapiens implementa las siguientes categorías de instrucciones:
 
+#### Efectos de las instrucciones sobre los flags
+
+| Instrucciones | N y Z | C |
+|---------------|-------|---|
+| `LDA`, `POP`, `AND`, `OR`, `XOR`, `NOT` | Se actualizan según el resultado de 8 bits | Se conserva |
+| `LDS` | Se actualizan según el valor de 16 bits cargado en SP | Se conserva |
+| `ADD`, `ADC`, `SUB`, `SBC` | Se actualizan según el resultado de 8 bits | Se actualiza según el acarreo o préstamo |
+| `SHL`, `SHR`, `SRA` | Se actualizan según el resultado de 8 bits | Recibe el bit expulsado |
+| `STA`, `STS`, `JMP`, `JN`, `JP`, `JZ`, `JNZ`, `JC`, `JNC`, `JSR`, `RET`, `PUSH`, `IN`, `OUT`, `TRAP`, `NOP`, `HLT` | Se conservan | Se conserva |
+
+Cuando se actualizan, Z vale 1 si el resultado es cero y N recibe el bit de signo (bit 7; en `LDS`, bit 15, con Z comprobando los 16 bits). `LDA`, `POP` y `LDS` actualizan N/Z aunque sean instrucciones de transferencia. `IN` y `TRAP` conservan los flags incluso cuando cambian AC.
+
 ### 5.1. Instrucciones de Transferencia de Datos
 
 | Mnemónico | Nombre | Descripción |
@@ -181,6 +193,10 @@ El procesador Sapiens implementa las siguientes categorías de instrucciones:
 | ADC | Add with Carry | AC = AC + operando + C (actualiza flags) |
 | SUB | Subtraction | AC = AC - operando (actualiza flags) |
 | SBC | Subtract with Carry | AC = AC - operando - C (actualiza flags) |
+
+**Convención de préstamo:** después de `SUB` o `SBC`, C vale 1 si hubo préstamo (resultado intermedio menor que cero, antes de limitar AC a 8 bits) y 0 en caso contrario. `SUB` ignora el C anterior; `SBC` lo usa directamente como préstamo de entrada: `AC = (AC - operando - C_anterior) & 0xFF`. Ambas actualizan N/Z según el resultado final y sustituyen C por el préstamo de salida.
+
+Ejemplos: `0 - 1` produce AC = `0xFF`, C = 1; `5 - 3` produce AC = 2, C = 0; `SBC` con AC = 3, operando = 3 y C anterior = 1 produce AC = `0xFF`, C = 1. Después de `SUB`, C = 1 indica que el AC original era menor que el operando, considerando valores sin signo. En `ADD`/`ADC`, C = 1 indica una suma mayor que 255; `ADC` suma el C anterior.
 
 ### 5.3. Instrucciones Lógicas
 
@@ -207,7 +223,7 @@ El procesador Sapiens implementa las siguientes categorías de instrucciones:
 | JZ | Jump if Zero | Salta si el flag Z = 1 |
 | JNZ | Jump if Not Zero | Salta si el flag Z = 0 |
 | JN | Jump if Negative | Salta si el flag N = 1 |
-| JP | Jump if Positive | Salta si el flag N = 0 |
+| JP | Jump if Positive | Salta si N = 0 y Z = 0 (estrictamente positivo) |
 | JC | Jump if Carry | Salta si el flag C = 1 |
 | JNC | Jump if No Carry | Salta si el flag C = 0 |
 
@@ -239,6 +255,7 @@ El procesador Sapiens implementa las siguientes categorías de instrucciones:
 | IN 0 | Lee el valor hexadecimal escrito por el usuario |
 | IN 1 | Lee el estado de la entrada (1 = dato disponible, 0 = sin dato) |
 | OUT 0 | Envía el AC a la pantalla hexadecimal de salida |
+| OUT 1 | Sin efecto. El puerto 1 es de solo lectura: IN 1 lee el estado del registro de entrada |
 | OUT 2 | Envía un carácter ASCII al banner de texto (lo añade al final) | 
 | OUT 3 | Limpia el banner de texto |
 

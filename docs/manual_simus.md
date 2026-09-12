@@ -84,9 +84,9 @@ Caixa com fundo escuro exibindo o mnemônico da instrução atualmente apontada 
 
 Três indicadores visuais que mostram o estado dos flags do processador:
 
-- **N (Negativo):** Acende em azul quando o resultado da última operação é negativo (bit 7 = 1)
+- **N (Negativo):** Indica o bit de sinal do último resultado que atualizou as flags: bit 7 nas operações de 8 bits e bit 15 em `LDS`.
 - **Z (Zero):** Acende em azul quando o resultado da última operação é zero
-- **C (Carry):** Acende em azul quando há overflow/carry na última operação aritmética
+- **C (Carry):** Indica transporte na adição, empréstimo na subtração ou o bit expulso em um deslocamento. Instruções que não atualizam C preservam seu valor anterior. C não é uma flag de overflow com sinal.
 
 #### 2.2.6. Portas de Entrada/Saída
 
@@ -171,6 +171,18 @@ Siga estes passos para desenvolver e executar programas no SimuS:
 
 O processador Sapiens implementa as seguintes categorias de instruções:
 
+#### Efeitos das instruções sobre as flags
+
+| Instruções | N e Z | C |
+|------------|-------|---|
+| `LDA`, `POP`, `AND`, `OR`, `XOR`, `NOT` | Atualizadas pelo resultado de 8 bits | Preservada |
+| `LDS` | Atualizadas pelo valor de 16 bits carregado em SP | Preservada |
+| `ADD`, `ADC`, `SUB`, `SBC` | Atualizadas pelo resultado de 8 bits | Atualizada pelo transporte ou empréstimo |
+| `SHL`, `SHR`, `SRA` | Atualizadas pelo resultado de 8 bits | Recebe o bit expulso |
+| `STA`, `STS`, `JMP`, `JN`, `JP`, `JZ`, `JNZ`, `JC`, `JNC`, `JSR`, `RET`, `PUSH`, `IN`, `OUT`, `TRAP`, `NOP`, `HLT` | Preservadas | Preservada |
+
+Quando atualizadas, Z vale 1 se o resultado for zero e N recebe o bit de sinal (bit 7; em `LDS`, bit 15, com Z testando os 16 bits). `LDA`, `POP` e `LDS` alteram N/Z mesmo sendo instruções de transferência. `IN` e `TRAP` preservam as flags mesmo quando alteram AC.
+
 ### 5.1. Instruções de Transferência de Dados
 
 | Mnemônico | Nome | Descrição |
@@ -188,6 +200,10 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | ADC | Add with Carry | AC = AC + operando + C (atualiza flags) |
 | SUB | Subtraction | AC = AC - operando (atualiza flags) |
 | SBC | Subtract with Carry | AC = AC - operando - C (atualiza flags) |
+
+**Convenção de empréstimo:** após `SUB` ou `SBC`, C vale 1 se houve empréstimo (resultado intermediário menor que zero, antes de limitar AC a 8 bits) e 0 caso contrário. `SUB` ignora o C anterior; `SBC` o usa diretamente como empréstimo de entrada: `AC = (AC - operando - C_anterior) & 0xFF`. Ambas atualizam N/Z pelo resultado final e substituem C pelo empréstimo de saída.
+
+Exemplos: `0 - 1` produz AC = `0xFF`, C = 1; `5 - 3` produz AC = 2, C = 0; `SBC` com AC = 3, operando = 3 e C anterior = 1 produz AC = `0xFF`, C = 1. Após `SUB`, C = 1 indica que o AC original era menor que o operando, considerando valores sem sinal. Em `ADD`/`ADC`, C = 1 indica soma maior que 255; `ADC` soma o C anterior.
 
 ### 5.3. Instruções Lógicas
 
@@ -214,7 +230,7 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | JZ | Jump if Zero | Salta se flag Z = 1 |
 | JNZ | Jump if Not Zero | Salta se flag Z = 0 |
 | JN | Jump if Negative | Salta se flag N = 1 |
-| JP | Jump if Positive | Salta se flag N = 0 |
+| JP | Jump if Positive | Salta se N = 0 e Z = 0 (estritamente positivo) |
 | JC | Jump if Carry | Salta se flag C = 1 |
 | JNC | Jump if No Carry | Salta se flag C = 0 |
 
@@ -246,6 +262,7 @@ O processador Sapiens implementa as seguintes categorias de instruções:
 | IN 0 | Lê valor hexadecimal digitado pelo usuário |
 | IN 1 | Lê status da entrada (1 = dado disponível, 0 = sem dado) |
 | OUT 0 | Envia AC para display hexadecimal de saída |
+| OUT 1 | Sem efeito. A porta 1 é somente de leitura: IN 1 lê o status do registrador de entrada |
 | OUT 2 | Envia caractere ASCII para banner de texto (adiciona ao final) |  
 | OUT 3 | Limpa o banner de texto |
 
