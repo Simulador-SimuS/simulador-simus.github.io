@@ -202,6 +202,17 @@
             border-left-color: #dc3545;
         }
 
+        .simulation-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .simulation-details > div {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
         .step-info {
             background: #e3f2fd;
             padding: 15px;
@@ -457,16 +468,8 @@
 
             <div class="control-group" style="grid-column: span 2;">
                 <label for="addressSequence">Sequência de Endereços (decimal ou hex 0x...):</label>
-                <textarea id="addressSequence" rows="3" placeholder="Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...">0, 4, 8, 12, 16, 20, 24, 0, 4, 8, 28, 32, 0, 16</textarea>
+                <textarea id="addressSequence" rows="3" placeholder="Ex: 0, 4, 8, 12, 16, 0, 4 ou 0x00, 0x04, 0x08...">0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x00, 0x04, 0x08, 0x1C, 0x20, 0x00, 0x10</textarea>
             </div>
-        </div>
-
-        <div class="buttons">
-            <button class="btn-primary" onclick="startSimulation()">▶ Iniciar Simulação</button>
-            <button class="btn-secondary" onclick="previousStep()">⏮ Anterior</button>
-            <button class="btn-secondary" onclick="nextStep()">Próximo ⏭</button>
-            <button class="btn-tertiary" onclick="autoPlay()">⏯ Auto</button>
-            <button class="btn-tertiary" onclick="resetSimulation()">🔄 Resetar</button>
         </div>
 
         <div id="configInfo"></div>
@@ -494,10 +497,20 @@
             </div>
         </div>
 
+        <div class="buttons">
+            <button class="btn-primary" onclick="startSimulation()">▶ Iniciar Simulação</button>
+            <button class="btn-secondary" onclick="previousStep()">⏮ Anterior</button>
+            <button class="btn-secondary" onclick="nextStep()">Próximo ⏭</button>
+            <button class="btn-tertiary" onclick="autoPlay()">⏯ Auto</button>
+            <button class="btn-tertiary" onclick="resetSimulation()">🔄 Resetar</button>
+        </div>
+
         <div class="main-content" id="mainContent" style="display: none;">
             <div class="visualization">
-                <div class="step-info" id="stepInfo"></div>
-                <div class="address-breakdown" id="addressBreakdown"></div>
+                <div class="simulation-details">
+                    <div class="step-info" id="stepInfo"></div>
+                    <div class="address-breakdown" id="addressBreakdown"></div>
+                </div>
                 <div id="cacheVisualization"></div>
             </div>
 
