@@ -76,7 +76,7 @@ Repositório com exemplos em linguagem de montagem do Sapiens:
 
 # 2. Ferramentas
 - [Conversor binário, hexadecimal e de inteiros com sinal](./tools/conversor_binhex.html)
-- [Simulador de Cache](./tools/simulador_cache.html)
+- [Simulador de Cache](./tools/simulador_cache_localidade.html)
 - [Simulador de Escalonamento de Páginas de Memória Virtual](./tools/simulador_paginas.html)
 - [Latência de acesso aos longo do tempo](./tools/latencia_interativa.html)
 
